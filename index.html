@@ -1057,6 +1057,7 @@ async function doLogin(){
 
 async function doLogout(){
   await sb.auth.signOut();
+  isAdmin = false;
   document.getElementById('appRoot').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginEmail').value = '';
@@ -1066,13 +1067,22 @@ async function doLogout(){
 let isAdmin = false;
 
 function onAuthenticated(){
+  isAdmin = false;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appRoot').style.display = 'block';
   sb.auth.getUser().then(async ({data})=>{
     document.getElementById('userEmailLabel').textContent = data.user ? data.user.email : '';
     if(data.user){
-      const { data: adminRow } = await sb.from('admins').select('user_id').eq('user_id', data.user.id).maybeSingle();
-      isAdmin = !!adminRow;
+      try{
+        const { data: adminRow, error } = await sb.from('admins').select('user_id').eq('user_id', data.user.id).maybeSingle();
+        if(error) throw error;
+        isAdmin = !!adminRow;
+      } catch(err){
+        console.error('No se pudo verificar rol de administrador:', err);
+        isAdmin = false;
+      }
+    } else {
+      isAdmin = false;
     }
     renderScenarioList();
   });
