@@ -1009,6 +1009,7 @@ function loadScenario(id){
 
 async function deleteScenario(id){
   if(!supabaseReady) return;
+  if(!isAdmin){ alert('Solo un administrador puede eliminar escenarios.'); return; }
   const { error } = await sb.from('scenarios').delete().eq('id', id);
   if(error){ console.error(error); alert('No se pudo eliminar: '+error.message); return; }
   await refreshScenarios();
@@ -1031,9 +1032,10 @@ function renderScenarioList(){
       '<div class="time">'+sc.time+'</div>'+
       '<div class="margin '+cls+'">'+fmt(sc.margenPlanta)+'</div>'+
       '<button class="scen-load-btn">Cargar</button>'+
-      '<button class="scen-del-btn">Eliminar</button>';
+      (isAdmin ? '<button class="scen-del-btn">Eliminar</button>' : '<span></span>');
     row.querySelector('.scen-load-btn').addEventListener('click', ()=>loadScenario(sc.id));
-    row.querySelector('.scen-del-btn').addEventListener('click', ()=>deleteScenario(sc.id));
+    const delBtn = row.querySelector('.scen-del-btn');
+    if(delBtn) delBtn.addEventListener('click', ()=>deleteScenario(sc.id));
     container.appendChild(row);
   });
 }
@@ -1061,11 +1063,18 @@ async function doLogout(){
   document.getElementById('loginPassword').value = '';
 }
 
+let isAdmin = false;
+
 function onAuthenticated(){
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appRoot').style.display = 'block';
-  sb.auth.getUser().then(({data})=>{
+  sb.auth.getUser().then(async ({data})=>{
     document.getElementById('userEmailLabel').textContent = data.user ? data.user.email : '';
+    if(data.user){
+      const { data: adminRow } = await sb.from('admins').select('user_id').eq('user_id', data.user.id).maybeSingle();
+      isAdmin = !!adminRow;
+    }
+    renderScenarioList();
   });
   calc();
   renderScenarioList();
