@@ -102,6 +102,41 @@
 
   footer.note{ max-width:1200px; margin:28px auto 0; padding:0 6vw; color:var(--text-dim); font-size:11.5px; line-height:1.6; }
 
+  /* ---------- LOGIN ---------- */
+  #loginScreen{
+    position:fixed; inset:0; background:var(--bg); z-index:1000;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .login-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:36px 34px; width:100%; max-width:360px; box-shadow:0 8px 24px rgba(21,48,44,0.10);
+  }
+  .login-card .brand-logo{ height:30px; margin-bottom:22px; }
+  .login-card h1{ font-family:var(--display); font-size:20px; font-weight:600; margin:0 0 6px; }
+  .login-card p{ color:var(--text-dim); font-size:13px; margin:0 0 22px; }
+  .login-field{ margin-bottom:14px; }
+  .login-field label{ display:block; font-size:12px; color:var(--text-dim); margin-bottom:5px; }
+  .login-field input{
+    width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-family:var(--sans); font-size:14px; padding:10px 12px; border-radius:8px;
+  }
+  .login-field input:focus{ outline:none; border-color:var(--copper); }
+  .login-btn{
+    width:100%; font-family:var(--display); font-weight:600; font-size:14px; color:#fff;
+    background:var(--copper); border:none; border-radius:8px; padding:11px; cursor:pointer;
+    margin-top:6px; transition:background .15s;
+  }
+  .login-btn:hover{ background:var(--copper-dim); }
+  .login-btn:disabled{ opacity:0.6; cursor:default; }
+  .login-error{ color:var(--red); font-size:12.5px; margin-top:12px; min-height:16px; }
+  #appRoot{ display:none; }
+  .logout-bar{ display:flex; justify-content:flex-end; align-items:center; gap:10px; padding:10px 6vw 0; font-size:12px; color:var(--text-dim); }
+  .logout-btn{
+    font-family:var(--mono); font-size:11.5px; color:var(--text-dim); background:none;
+    border:1px solid var(--line); border-radius:7px; padding:5px 11px; cursor:pointer;
+  }
+  .logout-btn:hover{ border-color:var(--red); color:var(--red); }
+
   /* ---------- ESCENARIOS GUARDADOS ---------- */
   .scen-bar{ display:flex; gap:10px; margin-bottom:14px; }
   .scen-bar input[type=text]{
@@ -190,6 +225,101 @@
 </style>
 </head>
 <body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <svg class="brand-logo" viewBox="0 0 400 132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ENAMI">
+<g transform="translate(0.000000,132.000000) scale(0.100000,-0.100000)"
+fill="#993921" stroke="none">
+<path d="M275 1008 c-8 -22 -185 -552 -185 -555 0 -2 112 -3 249 -3 l249 0 16
+47 c9 26 16 48 16 50 0 2 -54 3 -120 3 -66 0 -120 3 -120 7 0 4 10 37 22 74
+l22 68 119 3 120 3 13 45 c8 25 14 46 14 48 0 1 -52 2 -116 2 -89 0 -115 3
+-112 13 3 6 13 36 22 65 l18 52 123 0 123 0 15 45 16 45 -250 0 c-191 0 -251
+-3 -254 -12z M741 748 c-50 -150 -91 -279 -91 -286 0 -9 31 -12 119 -12 l119
+0 62 186 c34 102 66 184 70 182 4 -2 74 -85 155 -185 l146 -183 72 0 72 0 95
+285 96 286 -95 -3 -95 -3 -60 -183 c-33 -100 -64 -181 -68 -180 -5 2 -64 84
+-131 183 l-124 180 -125 3 -126 3 -91 -273z M1765 735 l-277 -285 95 0 c111 0
+73 -29 300 222 78 86 143 155 144 154 2 -1 86 -313 142 -523 l12 -43 119 0
+c66 0 120 3 120 8 0 4 -50 175 -112 380 l-112 372 -77 0 -76 0 -278 -285z
+M2512 789 l-139 -231 44 -136 c24 -76 46 -143 48 -151 3 -8 75 103 163 252 86
+146 159 263 163 259 3 -4 16 -45 28 -92 12 -47 31 -120 42 -162 l21 -78 37 0
+c34 1 46 12 195 170 88 94 161 169 163 167 2 -2 -4 -64 -12 -138 -8 -74 -15
+-149 -15 -166 l0 -33 90 0 89 0 5 33 c3 17 12 124 21 237 8 113 18 226 21 253
+l6 47 -70 0 -70 0 -167 -175 c-92 -96 -170 -175 -174 -175 -4 0 -31 79 -60
+175 l-54 175 -118 0 -118 0 -139 -231z M3571 747 c-50 -149 -91 -278 -91 -285
+0 -9 31 -12 119 -12 l119 0 95 285 95 285 -123 0 -123 0 -91 -273z M90 315 c0
+-54 1 -55 28 -54 23 2 24 2 5 6 -14 3 -23 12 -23 23 0 11 9 20 23 23 l22 4
+-22 2 c-25 1 -33 31 -9 31 8 0 18 5 21 10 4 6 -5 10 -19 10 -25 0 -26 -3 -26
+-55z M277 364 c-4 -4 -6 -30 -6 -58 1 -28 4 -42 6 -32 3 11 15 27 27 37 17 14
+19 21 10 35 -12 20 -27 27 -37 18z m31 -26 c-6 -18 -28 -21 -28 -4 0 9 7 16
+16 16 9 0 14 -5 12 -12z M341 313 c0 -40 3 -52 9 -38 7 18 8 19 15 3 4 -10 11
+-18 17 -18 5 0 6 6 1 13 -4 6 -8 30 -8 52 0 30 -4 40 -17 43 -16 3 -18 -4 -17
+-55z m29 22 c0 -8 -4 -15 -10 -15 -5 0 -10 7 -10 15 0 8 5 15 10 15 6 0 10 -7
+10 -15z M410 315 c0 -51 2 -55 23 -54 16 1 18 2 5 6 -10 2 -18 13 -18 23 0 10
+8 21 18 23 16 4 16 5 0 6 -22 1 -24 31 -3 31 8 0 15 5 15 10 0 6 -9 10 -20 10
+-18 0 -20 -7 -20 -55z M487 363 c-14 -13 -6 -41 15 -55 27 -18 16 -42 -15 -32
+-21 6 -21 5 -5 -12 14 -14 20 -15 32 -4 21 17 20 29 -5 56 -21 22 -18 51 3 38
+7 -4 8 -2 4 4 -8 13 -19 15 -29 5z M681 314 c2 -53 2 -55 8 -19 l6 39 32 -39
+32 -40 -1 60 c-1 57 -1 58 -7 17 l-6 -43 -32 42 -33 43 1 -60z M886 354 c-34
+-34 -4 -114 38 -98 24 9 20 23 -5 17 -24 -7 -39 10 -39 44 0 24 27 43 49 35 8
+-3 11 0 7 7 -10 16 -32 14 -50 -5z M1005 346 c-30 -46 10 -110 54 -87 43 24
+28 111 -19 111 -11 0 -27 -11 -35 -24z m54 0 c7 -8 11 -27 9 -43 -2 -22 -8
+-28 -28 -28 -20 0 -26 6 -28 28 -3 27 12 57 28 57 4 0 13 -6 19 -14z M1302
+318 c-2 -49 1 -58 16 -58 11 0 13 3 5 8 -6 4 -13 30 -16 57 l-3 50 -2 -57z
+M1390 316 c0 -53 1 -56 25 -56 36 0 55 42 34 78 -8 15 -25 28 -37 30 -20 3
+-22 -1 -22 -52z m50 19 c16 -19 -2 -65 -25 -65 -11 0 -15 11 -15 40 0 43 17
+53 40 25z M1480 315 c0 -51 2 -55 23 -54 16 1 18 2 5 6 -10 2 -18 13 -18 23 0
+10 8 21 18 23 16 4 16 5 0 6 -22 1 -24 31 -3 31 8 0 15 5 15 10 0 6 -9 10 -20
+10 -18 0 -20 -7 -20 -55z M1703 315 c0 -33 2 -45 4 -27 2 18 2 45 0 60 -2 15
+-4 0 -4 -33z M1840 315 c0 -54 1 -55 28 -54 23 2 24 2 5 6 -14 3 -23 12 -23
+23 0 11 9 20 23 23 l22 4 -22 2 c-25 1 -32 31 -8 31 8 0 15 5 15 10 0 6 -9 10
+-20 10 -18 0 -20 -7 -20 -55z M1911 313 c1 -42 3 -51 8 -33 l7 25 8 -22 c4
+-13 12 -23 17 -23 6 0 6 8 -1 20 -7 13 -7 26 -1 38 11 21 -3 52 -24 52 -12 0
+-15 -13 -14 -57z m29 22 c0 -8 -4 -15 -10 -15 -5 0 -10 7 -10 15 0 8 5 15 10
+15 6 0 10 -7 10 -15z M1983 315 c0 -33 2 -45 4 -27 2 18 2 45 0 60 -2 15 -4 0
+-4 -33z M171 355 c-1 -5 -6 -29 -10 -52 -5 -24 -4 -43 0 -43 5 0 9 15 9 33 l1
+32 19 -35 18 -35 7 28 c9 35 25 35 25 0 0 -14 3 -24 6 -20 4 3 3 28 -1 54 l-8
+48 -17 -38 -17 -38 -16 38 c-8 21 -16 34 -16 28z M577 353 c-17 -27 -35 -93
+-27 -93 6 0 10 7 10 15 0 21 30 19 47 -2 13 -16 13 -16 7 7 -14 53 -30 84 -37
+73z m9 -50 c-10 -10 -19 5 -10 18 6 11 8 11 12 0 2 -7 1 -15 -2 -18z M796 314
+c-9 -26 -14 -50 -11 -52 2 -3 7 3 11 12 8 20 33 21 40 1 4 -8 10 -15 14 -15 8
+0 -20 83 -32 95 -3 3 -13 -15 -22 -41z m34 -5 c0 -5 -4 -9 -10 -9 -5 0 -10 7
+-10 16 0 8 5 12 10 9 6 -3 10 -10 10 -16z M963 310 c0 -30 2 -43 4 -27 2 15 2
+39 0 55 -2 15 -4 2 -4 -28z M1111 310 c2 -52 2 -53 8 -16 l6 40 25 -37 c14
+-20 28 -37 33 -37 4 0 7 23 7 50 0 28 -4 50 -10 50 -5 0 -10 -16 -10 -36 l0
+-37 -22 29 c-12 16 -25 33 -30 39 -4 5 -7 -16 -7 -45z M1238 354 c-15 -24 -35
+-94 -27 -94 5 0 9 7 9 15 0 21 30 19 47 -2 13 -16 13 -16 7 7 -13 49 -30 84
+-36 74z m8 -51 c-10 -10 -19 5 -10 18 6 11 8 11 12 0 2 -7 1 -15 -2 -18z
+M1601 355 c-1 -5 -6 -29 -10 -52 -5 -24 -4 -43 0 -43 5 0 9 15 9 33 l1 32 19
+-35 18 -35 7 28 c9 35 25 35 25 0 0 -14 3 -24 6 -20 4 3 3 28 -1 54 l-8 48
+-17 -38 -17 -38 -16 38 c-8 21 -16 34 -16 28z M1742 310 c1 -51 1 -52 7 -16
+l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
+-14 -7 -37 l4 -36 -33 39 -33 39 2 -55z M2026 314 c-9 -26 -14 -50 -11 -52 2
+-3 7 3 11 12 8 20 33 21 40 1 4 -8 10 -15 14 -15 8 0 -20 83 -32 95 -3 3 -13
+-15 -22 -41z m34 -5 c0 -5 -4 -9 -10 -9 -5 0 -10 7 -10 16 0 8 5 12 10 9 6 -3
+10 -10 10 -16z"/>
+</g>
+</svg>
+    <h1>Calculador de Margen de Planta</h1>
+    <p>Ingresa con tu cuenta para continuar.</p>
+    <div class="login-field">
+      <label for="loginEmail">Correo</label>
+      <input type="email" id="loginEmail" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label for="loginPassword">Contraseña</label>
+      <input type="password" id="loginPassword" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Ingresar</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div id="appRoot">
+<div class="logout-bar">
+  <span id="userEmailLabel"></span>
+  <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+</div>
 
 <header>
   <svg class="brand-logo" viewBox="0 0 400 132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ENAMI Empresa Nacional de Minería">
@@ -908,10 +1038,59 @@ function renderScenarioList(){
   });
 }
 
+// ================= AUTENTICACIÓN (Supabase Auth) =================
+async function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn = document.getElementById('loginBtn');
+  errEl.textContent = '';
+  if(!email || !password){ errEl.textContent = 'Ingresa correo y contraseña.'; return; }
+  btn.disabled = true; btn.textContent = 'Ingresando…';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Ingresar';
+  if(error){ errEl.textContent = 'Credenciales inválidas.'; return; }
+  onAuthenticated();
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+
+function onAuthenticated(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  sb.auth.getUser().then(({data})=>{
+    document.getElementById('userEmailLabel').textContent = data.user ? data.user.email : '';
+  });
+  calc();
+  renderScenarioList();
+  refreshScenarios();
+}
+
 document.querySelectorAll('#panel-calc input').forEach(el=>el.addEventListener('input', calc));
-calc();
-renderScenarioList();
-refreshScenarios();
+document.getElementById('loginPassword')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doLogin(); });
+
+(async function initAuth(){
+  if(!supabaseReady){
+    // Sin Supabase configurado: no exigimos login, se muestra la app directo (modo demo/local)
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appRoot').style.display = 'block';
+    calc(); renderScenarioList();
+    return;
+  }
+  const { data } = await sb.auth.getSession();
+  if(data.session){
+    onAuthenticated();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+})();
 </script>
+</div>
 </body>
 </html>
