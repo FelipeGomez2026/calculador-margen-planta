@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculador de Margen de Planta — Maquila</title>
+<title>Calculador de Margen de Planta Delta - Método Maquila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -305,7 +305,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 10 -10 10 -16z"/>
 </g>
 </svg>
-    <h1>Calculador de Margen de Planta</h1>
+    <h1>Calculador de Margen de Planta Delta</h1>
     <p>Ingresa con tu cuenta para continuar.</p>
     <div class="login-field">
       <label for="loginEmail">Correo</label>
@@ -399,37 +399,37 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 10 -10 10 -16z"/>
 </g>
 </svg>
-  <p class="eyebrow">Planta de Beneficio · Maquila</p>
-  <h1>Calculador de Margen de Planta</h1>
+  <p class="eyebrow">Planta Delta - Método Maquila</p>
+  <h1>Calculador de Margen de Planta Delta</h1>
   <p class="sub">Ingresa tonelajes y leyes de alimentación por etapa, recuperaciones metalúrgicas, un costo de planta estimado y los precios de metales. El margen se recalcula al instante.</p>
   <div class="ben-cards" id="benCards">
     <div class="ben-card general">
-      <div class="lbl">Mezcla Global — Cobre</div>
+      <div class="lbl">Mezcla Global - Cobre</div>
       <div class="gen-block">
-        <div class="gen-row"><span class="k">Ley Cabeza</span><span class="v" id="genLeyCabeza">—</span></div>
-        <div class="gen-row"><span class="k">Recuperación</span><span class="v" id="genRecuperacion">—</span></div>
-        <div class="gen-row"><span class="k">Ley Concentrado</span><span class="v" id="genLeyConc">—</span></div>
+        <div class="gen-row"><span class="k">Ley Cabeza</span><span class="v" id="genLeyCabeza">-</span></div>
+        <div class="gen-row"><span class="k">Recuperación</span><span class="v" id="genRecuperacion">-</span></div>
+        <div class="gen-row"><span class="k">Ley Concentrado</span><span class="v" id="genLeyConc">-</span></div>
       </div>
     </div>
     <div class="ben-card tarifa">
       <div class="lbl">Tonelaje Cobre Tarifa</div>
-      <div class="val" id="benTarifaTon">—<span class="unit">tms</span></div>
-      <div class="pct" id="benTarifaPct">—</div>
+      <div class="val" id="benTarifaTon">-<span class="unit">tms</span></div>
+      <div class="pct" id="benTarifaPct">-</div>
     </div>
     <div class="ben-card mina">
       <div class="lbl">Tonelaje Cobre Mina</div>
-      <div class="val" id="benMinaTon">—<span class="unit">tms</span></div>
-      <div class="pct" id="benMinaPct">—</div>
+      <div class="val" id="benMinaTon">-<span class="unit">tms</span></div>
+      <div class="pct" id="benMinaPct">-</div>
     </div>
     <div class="ben-card barridos">
       <div class="lbl">Tonelaje Barridos</div>
-      <div class="val" id="benBarridosTon">—<span class="unit">tms</span></div>
-      <div class="pct" id="benBarridosPct">—</div>
+      <div class="val" id="benBarridosTon">-<span class="unit">tms</span></div>
+      <div class="pct" id="benBarridosPct">-</div>
     </div>
     <div class="ben-card oro">
       <div class="lbl">Tonelaje Oro</div>
-      <div class="val" id="benOroTon">—<span class="unit">tms</span></div>
-      <div class="pct" id="benOroPct">—</div>
+      <div class="val" id="benOroTon">-<span class="unit">tms</span></div>
+      <div class="pct" id="benOroPct">-</div>
     </div>
   </div>
 </header>
@@ -450,7 +450,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <button class="scen-save-btn" onclick="saveScenario()">Guardar escenario actual</button>
     </div>
     <div id="scenWarning" class="scen-empty" style="display:none; color:var(--red);">
-      ⚠ Falta configurar la conexión a Supabase — edita SUPABASE_URL y SUPABASE_ANON_KEY al inicio del &lt;script&gt; en este archivo.
+      ⚠ Falta configurar la conexión a Supabase - edita SUPABASE_URL y SUPABASE_ANON_KEY al inicio del &lt;script&gt; en este archivo.
     </div>
     <div id="scenList"><div class="scen-empty">Aún no hay escenarios guardados.</div></div>
   </section>
@@ -458,7 +458,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
   <!-- ===================== INGRESO ===================== -->
   <section class="card">
     <h2><span class="idx">A</span> Ingreso por Cargo de Tratamiento</h2>
-    <p class="desc">Tonelaje que pasa por cada etapa, valorizado a la tarifa de maquila pactada (US$/TMS). Los Barridos no llevan cargo de tratamiento — se valorizan aparte, como venta directa de concentrado (sección D).</p>
+    <p class="desc">Tonelaje que pasa por cada etapa, valorizado a la tarifa de maquila pactada (US$/TMS). Los Barridos no llevan cargo de tratamiento - se valorizan aparte, como venta directa de concentrado (sección D).</p>
     <div class="row" style="border-bottom:1px solid var(--line); padding-bottom:8px;">
       <div class="colhead">Etapa</div><div class="colhead">Tonelaje (tms)</div><div class="colhead">Tarifa US$/TMS</div><div class="colhead" style="text-align:right;">Ingreso US$</div>
     </div>
@@ -466,31 +466,31 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <div class="name">Recepción / Compra</div>
       <input type="number" id="ton_recepcion" value="67112.315" step="1">
       <input type="number" id="tarifa_recepcion" value="7.17" step="0.01">
-      <div class="subtotal" id="ing_recepcion">—</div>
+      <div class="subtotal" id="ing_recepcion">-</div>
     </div>
     <div class="row">
       <div class="name">Chancado</div>
       <input type="number" id="ton_chancado" value="75016.478" step="1">
       <input type="number" id="tarifa_chancado" value="6.75" step="0.01">
-      <div class="subtotal" id="ing_chancado">—</div>
+      <div class="subtotal" id="ing_chancado">-</div>
     </div>
     <div class="row">
       <div class="name">Beneficio Cobre <small>Tarifa</small></div>
       <input type="number" id="ton_cutarifa" value="23478.871" step="1">
       <input type="number" id="tarifa_cutarifa" value="27.50" step="0.01">
-      <div class="subtotal" id="ing_cutarifa">—</div>
+      <div class="subtotal" id="ing_cutarifa">-</div>
     </div>
     <div class="row">
       <div class="name">Beneficio Cobre <small>Mina</small></div>
       <input type="number" id="ton_cumina" value="32074.389" step="1">
       <input type="number" id="tarifa_cumina" value="27.50" step="0.01">
-      <div class="subtotal" id="ing_cumina">—</div>
+      <div class="subtotal" id="ing_cumina">-</div>
     </div>
     <div class="row">
       <div class="name">Beneficio Oro <small>solo si hay concentrado propio</small></div>
       <input type="number" id="ton_au" value="4034.17" step="1">
       <input type="number" id="tarifa_au" value="27.78" step="0.01">
-      <div class="subtotal" id="ing_au">—</div>
+      <div class="subtotal" id="ing_au">-</div>
     </div>
     <div class="miniresult"><span class="l">Total Ingreso</span><span class="v" id="total_ingreso">US$ 0</span></div>
   </section>
@@ -559,7 +559,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
     <div class="grid2">
       <!-- CU TARIFA -->
       <div class="lineblock" id="block_cutarifa">
-        <h3>Beneficio Cobre — Tarifa</h3>
+        <h3>Beneficio Cobre - Tarifa</h3>
         <span class="tag">tonelaje = Beneficio Cu Tarifa (sección A). Fino de Oro (Beneficio Oro) se agrega a la valorización.</span>
         <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
           <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
@@ -579,7 +579,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 
       <!-- CU MINA -->
       <div class="lineblock" id="block_cumina">
-        <h3>Beneficio Cobre — Mina</h3>
+        <h3>Beneficio Cobre - Mina</h3>
         <span class="tag">tonelaje tomado de sección A</span>
         <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
           <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
@@ -599,7 +599,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 
       <!-- BARRIDOS -->
       <div class="lineblock" id="block_barridos">
-        <h3>Beneficio Cobre — Barridos</h3>
+        <h3>Beneficio Cobre - Barridos</h3>
         <span class="tag">venta directa de concentrado, sin comparación contractual</span>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Beneficio <small>tonelaje, tms</small></div><input type="number" id="ton_b" value="495.39" step="1"></div>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley <small>cabeza Cu, %</small></div><input type="number" id="leyCu_b" value="1.66" step="0.01"></div>
@@ -633,8 +633,8 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
         <h2><span class="idx">R</span> Resultado del Escenario</h2>
         <p class="desc">Comparación entre el caso base (pestaña Calculador) y el escenario con los ajustes de la izquierda.</p>
         <div class="scenario-box">
-          <div class="row2"><span class="l">Margen de Planta — Base</span><span class="v" id="sens_base">US$ 0</span></div>
-          <div class="row2"><span class="l">Margen de Planta — Escenario</span><span class="v" id="sens_escenario">US$ 0</span></div>
+          <div class="row2"><span class="l">Margen de Planta - Base</span><span class="v" id="sens_base">US$ 0</span></div>
+          <div class="row2"><span class="l">Margen de Planta - Escenario</span><span class="v" id="sens_escenario">US$ 0</span></div>
           <div class="row2 total"><span class="l">Diferencia</span><span class="v" id="sens_delta">US$ 0</span></div>
         </div>
       </section>
@@ -673,7 +673,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 </div>
 
 <footer class="note">
-  Modelo simplificado de referencia. La Ley de Concentrado "real" es editable en cada línea — si la dejas igual a la pactada, el margen refleja solo la diferencia de recuperación. Barridos se valoriza como venta directa de concentrado (con su propia ley de concentrado), sin comparación contractual. Gastos Administrativos se descuenta una sola vez, a nivel de planta.
+  Modelo simplificado de referencia. La Ley de Concentrado "real" es editable en cada línea - si la dejas igual a la pactada, el margen refleja solo la diferencia de recuperación. Barridos se valoriza como venta directa de concentrado (con su propia ley de concentrado), sin comparación contractual. Gastos Administrativos se descuenta una sola vez, a nivel de planta.
 </footer>
 
 <script>
@@ -785,7 +785,7 @@ function calc(){
   document.getElementById('genLeyConc').textContent = leyConcPond.toFixed(2)+'% Cu';
 
   const totalBen = P.ton_t + P.ton_m + P.ton_b + P.ton_o;
-  const pctFmt = (v)=> totalBen>0 ? (v/totalBen*100).toFixed(1)+'%' : '—';
+  const pctFmt = (v)=> totalBen>0 ? (v/totalBen*100).toFixed(1)+'%' : '-';
   document.getElementById('benTarifaTon').innerHTML = P.ton_t.toLocaleString('es-CL')+'<span class="unit">tms</span>';
   document.getElementById('benTarifaPct').textContent = pctFmt(P.ton_t);
   document.getElementById('benMinaTon').innerHTML = P.ton_m.toLocaleString('es-CL')+'<span class="unit">tms</span>';
@@ -846,7 +846,7 @@ function buildSliders(){
     row.innerHTML =
       '<div class="top"><span class="name">'+v.label+'</span><span class="delta" id="delta_'+v.key+'">0%</span></div>'+
       '<input type="range" min="-50" max="50" step="1" value="0" id="slider_'+v.key+'">'+
-      '<div class="vals"><span class="basev" id="baseval_'+v.key+'">base: —</span>'+
+      '<div class="vals"><span class="basev" id="baseval_'+v.key+'">base: -</span>'+
       '<input type="number" class="newval-input" id="newval_'+v.key+'" title="Ingresa el valor nuevo directamente"></div>';
     container.appendChild(row);
   });
