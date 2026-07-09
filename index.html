@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculador de Margen de Planta — Maquila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -312,6 +313,9 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <input type="text" id="scenName" placeholder="Nombre del escenario (ej: Mayo 2026 real)">
       <button class="scen-save-btn" onclick="saveScenario()">Guardar escenario actual</button>
     </div>
+    <div id="scenWarning" class="scen-empty" style="display:none; color:var(--red);">
+      ⚠ Falta configurar la conexión a Supabase — edita SUPABASE_URL y SUPABASE_ANON_KEY al inicio del &lt;script&gt; en este archivo.
+    </div>
     <div id="scenList"><div class="scen-empty">Aún no hay escenarios guardados.</div></div>
   </section>
 
@@ -347,7 +351,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <div class="subtotal" id="ing_cumina">—</div>
     </div>
     <div class="row">
-      <div class="name">Beneficio Oro <small>No implica concentrado de oro</small></div>
+      <div class="name">Beneficio Oro <small>solo si hay concentrado propio</small></div>
       <input type="number" id="ton_au" value="4034.17" step="1">
       <input type="number" id="tarifa_au" value="27.78" step="0.01">
       <div class="subtotal" id="ing_au">—</div>
@@ -796,7 +800,16 @@ function showTab(name){
   document.getElementById('tabBtnSens').classList.toggle('active', name==='sens');
 }
 
-// ================= ESCENARIOS GUARDADOS =================
+// ================= ESCENARIOS GUARDADOS (Supabase) =================
+// 1) Crea un proyecto en https://supabase.com
+// 2) Ejecuta supabase_schema.sql en el SQL Editor de tu proyecto
+// 3) Reemplaza estos dos valores por los de tu proyecto (Settings > API)
+const SUPABASE_URL = 'https://ubrbfsmglxyxinyjyrev.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVicmJmc21nbHh5eGlueWp5cmV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTkyMjQsImV4cCI6MjA5OTE5NTIyNH0.wg22CljBNIkR9YMwrYooGHSSNs1dcw2zJT_ZB9J_UC8';
+
+const supabaseReady = SUPABASE_URL !== 'TU_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'TU_SUPABASE_ANON_KEY';
+const sb = supabaseReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 // Mapeo clave interna (readParams) -> id del input en el DOM
 const FIELD_ID_MAP = {
   ton_r:'ton_recepcion', tar_r:'tarifa_recepcion',
@@ -821,19 +834,32 @@ const FIELD_ID_MAP = {
   ton_b:'ton_b', leyCu_b:'leyCu_b', recCu_b:'recCu_b', leyConc_b:'leyConc_b'
 };
 
-let savedScenarios = [];
-let scenarioCounter = 0;
+let savedScenarios = []; // caché local, sincronizada con Supabase
 
-function saveScenario(){
+async function refreshScenarios(){
+  if(!supabaseReady) return;
+  const { data, error } = await sb.from('scenarios').select('*').order('created_at', { ascending:false });
+  if(error){ console.error('Error cargando escenarios:', error); return; }
+  savedScenarios = data.map(row => ({
+    id: row.id, name: row.name, time: new Date(row.created_at).toLocaleDateString('es-CL')+' '+new Date(row.created_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}),
+    params: row.params, margenPlanta: Number(row.margen_planta)
+  }));
+  renderScenarioList();
+}
+
+async function saveScenario(){
+  if(!supabaseReady){ alert('Falta configurar Supabase (ver aviso en la tarjeta de Escenarios).'); return; }
   const nameInput = document.getElementById('scenName');
-  const name = nameInput.value.trim() || ('Escenario '+(++scenarioCounter));
+  const name = nameInput.value.trim() || ('Escenario '+new Date().toLocaleTimeString('es-CL'));
   const P = readParams();
   const R = computeModel(P);
-  const now = new Date();
-  const time = now.toLocaleDateString('es-CL')+' '+now.toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
-  savedScenarios.push({ id: Date.now(), name, time, params: P, margenPlanta: R.margenPlanta });
+  const btn = document.querySelector('.scen-save-btn');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+  const { error } = await sb.from('scenarios').insert({ name, margen_planta: R.margenPlanta, params: P });
+  btn.disabled = false; btn.textContent = 'Guardar escenario actual';
+  if(error){ console.error(error); alert('No se pudo guardar el escenario: '+error.message); return; }
   nameInput.value = '';
-  renderScenarioList();
+  await refreshScenarios();
 }
 
 function loadScenario(id){
@@ -851,19 +877,22 @@ function loadScenario(id){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function deleteScenario(id){
-  savedScenarios = savedScenarios.filter(s=>s.id!==id);
-  renderScenarioList();
+async function deleteScenario(id){
+  if(!supabaseReady) return;
+  const { error } = await sb.from('scenarios').delete().eq('id', id);
+  if(error){ console.error(error); alert('No se pudo eliminar: '+error.message); return; }
+  await refreshScenarios();
 }
 
 function renderScenarioList(){
   const container = document.getElementById('scenList');
+  document.getElementById('scenWarning').style.display = supabaseReady ? 'none' : 'block';
   if(savedScenarios.length===0){
     container.innerHTML = '<div class="scen-empty">Aún no hay escenarios guardados.</div>';
     return;
   }
   container.innerHTML = '';
-  savedScenarios.slice().reverse().forEach(sc=>{
+  savedScenarios.forEach(sc=>{
     const row = document.createElement('div');
     row.className='scen-row';
     const cls = sc.margenPlanta>=0?'pos':'neg';
@@ -881,6 +910,8 @@ function renderScenarioList(){
 
 document.querySelectorAll('#panel-calc input').forEach(el=>el.addEventListener('input', calc));
 calc();
+renderScenarioList();
+refreshScenarios();
 </script>
 </body>
 </html>
