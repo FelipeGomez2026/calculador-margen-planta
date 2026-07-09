@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculador de Margen de Planta — Maquila</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F2F7F6; --panel: #FFFFFF; --panel-2: #EAF3F1; --line: #D2E3E0;
+    --copper: #00877C; --copper-dim: #00655C;
+    --amber: #C68A00; --orange: #F88D2B;
+    --text: #15302C; --text-dim: #5E7370;
+    --green: #00655C; --red: #9A3B26;
+    --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif; --display: 'Space Grotesk', sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); padding-bottom:120px; }
+  header{ padding:44px 6vw 26px; border-bottom:1px solid var(--line); position:relative; overflow:hidden; }
+  header::before{ content:""; position:absolute; top:-40%; right:-10%; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, rgba(0,135,124,0.10), transparent 70%); }
+  header::after{ content:""; position:absolute; bottom:-60%; left:10%; width:300px; height:300px; border-radius:50%;
+    background:radial-gradient(circle, rgba(248,141,43,0.10), transparent 70%); }
+  .brand-logo{ height:34px; width:auto; display:block; margin-bottom:18px; fill:#9A3B26; }
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--amber); margin:0 0 10px; }
+  h1{ font-family:var(--display); font-weight:600; font-size:clamp(26px,4vw,40px); margin:0 0 10px; letter-spacing:-0.01em; }
+  header p.sub{ color:var(--text-dim); max-width:640px; margin:0; font-size:14.5px; line-height:1.55; }
+
+  .ben-cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px; margin:26px 6vw 0; }
+  .ben-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+    border-top:4px solid var(--acc); box-shadow:0 2px 6px rgba(21,48,44,0.06); position:relative; overflow:hidden;
+  }
+  .ben-card::before{
+    content:""; position:absolute; top:-30%; right:-20%; width:120px; height:120px; border-radius:50%;
+    background:var(--acc); opacity:0.07;
+  }
+  .ben-card.general{ --acc:#9A3B26; } .ben-card.tarifa{ --acc:#00877C; } .ben-card.mina{ --acc:#00655C; }
+  .ben-card.barridos{ --acc:#F88D2B; } .ben-card.oro{ --acc:#C68A00; }
+  .ben-card .lbl{ font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--acc); }
+  .ben-card .val{ font-family:var(--mono); font-size:22px; font-weight:600; margin-top:8px; }
+  .ben-card .unit{ font-family:var(--mono); font-size:10.5px; color:var(--text-dim); margin-left:4px; }
+  .ben-card .pct{
+    display:inline-block; margin-top:8px; font-family:var(--mono); font-size:11px; font-weight:600;
+    color:var(--acc); background:var(--acc); background:color-mix(in srgb, var(--acc) 14%, white); padding:2px 9px; border-radius:20px;
+  }
+  .ben-card .gen-row{ display:flex; justify-content:space-between; align-items:baseline; font-size:12px; padding:5px 0; border-bottom:1px dashed var(--line); }
+  .ben-card .gen-row:last-child{ border-bottom:none; }
+  .ben-card .gen-row .k{ color:var(--text-dim); }
+  .ben-card .gen-row .v{ font-family:var(--mono); font-weight:600; font-size:13px; }
+  .ben-card .gen-block{ margin-top:8px; }
+
+  main{ padding:32px 6vw 0; display:grid; gap:20px; max-width:1200px; margin:0 auto; }
+  .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+  .grid4{ display:grid; grid-template-columns: repeat(4,1fr); gap:16px; }
+  @media (max-width:980px){ .grid2, .grid4{ grid-template-columns:1fr; } }
+
+  section.card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px 24px; box-shadow:0 1px 3px rgba(21,48,44,0.06); }
+  section.card h2{ font-family:var(--display); font-size:18px; font-weight:600; margin:0 0 4px; display:flex; align-items:center; gap:10px; }
+  section.card h2 .idx{ font-family:var(--mono); font-size:12px; color:var(--amber); border:1px solid var(--orange); border-radius:6px; padding:2px 7px; }
+  section.card .desc{ color:var(--text-dim); font-size:12.5px; margin:0 0 16px; line-height:1.5; }
+
+  .row{ display:grid; grid-template-columns: 1.3fr 0.85fr 0.85fr 0.9fr; gap:8px; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); }
+  .row:last-child{ border-bottom:none; }
+  .row .name{ font-size:13px; } .row .name small{ display:block; color:var(--text-dim); font-size:10.5px; margin-top:2px; }
+  .colhead{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-dim); }
+
+  input[type=number]{ width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-family:var(--mono); font-size:13px; padding:7px 8px; border-radius:7px; text-align:right; transition:border-color .15s, background .15s; }
+  input[type=number]:focus{ outline:none; border-color:var(--copper); background:#DDF0EC; }
+
+  .subtotal{ font-family:var(--mono); font-size:13px; text-align:right; }
+  .unit{ font-family:var(--mono); font-size:10.5px; color:var(--text-dim); text-align:center; }
+
+  details.adv{ margin-top:12px; border-top:1px dashed var(--line); padding-top:10px; }
+  details.adv summary{ cursor:pointer; font-family:var(--mono); font-size:11.5px; color:var(--copper); letter-spacing:.03em; list-style:none; user-select:none; }
+  details.adv summary::-webkit-details-marker{ display:none; }
+  details.adv summary::before{ content:"▸ "; }
+  details.adv[open] summary::before{ content:"▾ "; }
+
+  .lineblock{ border:1px solid var(--line); border-radius:9px; padding:14px 16px; background:var(--panel-2); }
+  .lineblock h3{ font-family:var(--display); font-size:14px; margin:0 0 3px; color:var(--copper); font-weight:600; }
+  .lineblock .tag{ font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-bottom:10px; display:block; }
+
+  .miniresult{ margin-top:12px; padding:10px 12px; border-radius:9px; background:var(--panel-2); display:flex; justify-content:space-between; align-items:baseline; border:1px solid var(--line); }
+  .miniresult .l{ font-size:12.5px; color:var(--text-dim); }
+  .miniresult .v{ font-family:var(--mono); font-size:15.5px; font-weight:600; }
+  .pos{ color:var(--green); } .neg{ color:var(--red); }
+
+  .sticky{ position:fixed; bottom:0; left:0; right:0; background:linear-gradient(180deg, rgba(242,247,246,0), var(--bg) 30%);
+    box-shadow:0 -2px 12px rgba(21,48,44,0.06);
+    border-top:1px solid var(--line); padding:14px 6vw 18px; backdrop-filter:blur(6px); z-index:50; }
+  .sticky-inner{ max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px 24px; }
+  .sticky .breakdown{ display:flex; gap:22px; flex-wrap:wrap; }
+  .sticky .breakdown .item{ font-family:var(--mono); font-size:11.5px; color:var(--text-dim); }
+  .sticky .breakdown .item b{ color:var(--text); font-size:12.5px; display:block; margin-top:2px; }
+  .sticky .hero{ text-align:right; }
+  .sticky .hero .l{ font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); }
+  .sticky .hero .v{ font-family:var(--display); font-size:clamp(20px,3vw,32px); font-weight:700; }
+
+  footer.note{ max-width:1200px; margin:28px auto 0; padding:0 6vw; color:var(--text-dim); font-size:11.5px; line-height:1.6; }
+
+  /* ---------- ESCENARIOS GUARDADOS ---------- */
+  .scen-bar{ display:flex; gap:10px; margin-bottom:14px; }
+  .scen-bar input[type=text]{
+    flex:1; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-family:var(--sans); font-size:13px; padding:9px 12px; border-radius:8px;
+  }
+  .scen-bar input[type=text]:focus{ outline:none; border-color:var(--copper); }
+  .scen-save-btn{
+    font-family:var(--display); font-weight:600; font-size:13px; color:#fff; background:var(--copper);
+    border:none; border-radius:8px; padding:9px 18px; cursor:pointer; white-space:nowrap; transition:background .15s;
+  }
+  .scen-save-btn:hover{ background:var(--copper-dim); }
+  .scen-empty{ font-size:12.5px; color:var(--text-dim); font-style:italic; padding:8px 0; }
+  .scen-row{
+    display:grid; grid-template-columns: 1.3fr 1fr 1fr auto auto; gap:12px; align-items:center;
+    padding:10px 0; border-bottom:1px solid var(--line);
+  }
+  .scen-row:last-child{ border-bottom:none; }
+  .scen-row .name{ font-size:13px; font-weight:500; }
+  .scen-row .time{ font-family:var(--mono); font-size:11px; color:var(--text-dim); }
+  .scen-row .margin{ font-family:var(--mono); font-size:13px; font-weight:600; }
+  .scen-load-btn, .scen-del-btn{
+    font-family:var(--mono); font-size:11px; border-radius:6px; padding:5px 10px; cursor:pointer; border:1px solid;
+    background:none; white-space:nowrap;
+  }
+  .scen-load-btn{ color:var(--copper); border-color:var(--copper); }
+  .scen-load-btn:hover{ background:var(--panel-2); }
+  .scen-del-btn{ color:var(--red); border-color:var(--red); }
+  .scen-del-btn:hover{ background:var(--panel-2); }
+
+  /* ---------- TABS ---------- */
+  .tabs{ display:flex; gap:6px; margin:26px 6vw 0; border-bottom:1px solid var(--line); max-width:1200px; }
+  .tab-btn{
+    font-family:var(--display); font-size:14px; font-weight:600; color:var(--text-dim);
+    background:none; border:none; padding:10px 4px; margin-right:22px; cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s, border-color .15s;
+  }
+  .tab-btn:hover{ color:var(--text); }
+  .tab-btn.active{ color:var(--copper); border-bottom-color:var(--copper); }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---------- SENSIBILIZACIÓN ---------- */
+  .sens-grid{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap:20px; max-width:1200px; margin:0 auto; padding:28px 6vw 0; }
+  @media (max-width:980px){ .sens-grid{ grid-template-columns:1fr; } }
+
+  .slider-row{ padding:12px 0; border-bottom:1px solid var(--line); }
+  .slider-row:last-child{ border-bottom:none; }
+  .slider-row .top{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:6px; }
+  .slider-row .top .name{ font-weight:500; }
+  .slider-row .top .delta{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .slider-row .top .delta.pos{ color:var(--green); } .slider-row .top .delta.neg{ color:var(--red); }
+  .slider-row input[type=range]{
+    width:100%; accent-color:var(--copper); height:4px; cursor:pointer;
+  }
+  .slider-row .vals{ display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:10.5px; color:var(--text-dim); margin-top:6px; }
+  .slider-row .vals .basev{ white-space:nowrap; }
+  .slider-row .newval-input{
+    width:130px; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    font-family:var(--mono); font-size:12px; padding:5px 7px; border-radius:6px; text-align:right;
+  }
+  .slider-row .newval-input:focus{ outline:none; border-color:var(--copper); }
+
+  .reset-btn{
+    font-family:var(--mono); font-size:11.5px; color:var(--copper); background:none;
+    border:1px solid var(--copper); border-radius:7px; padding:6px 12px; cursor:pointer;
+    transition:background .15s;
+  }
+  .reset-btn:hover{ background:var(--panel-2); }
+
+  .scenario-box{ margin-top:6px; padding:16px 18px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line); }
+  .scenario-box .row2{ display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; }
+  .scenario-box .row2 .l{ font-size:13px; color:var(--text-dim); }
+  .scenario-box .row2 .v{ font-family:var(--mono); font-size:15px; font-weight:600; }
+  .scenario-box .row2.total{ border-top:1px solid var(--line); margin-top:4px; padding-top:12px; }
+  .scenario-box .row2.total .v{ font-size:19px; }
+
+  .tornado-row{ display:grid; grid-template-columns: 130px 1fr 90px; align-items:center; gap:10px; padding:7px 0; }
+  .tornado-row .lbl{ font-size:12px; color:var(--text-dim); }
+  .tornado-track{ position:relative; height:16px; background:var(--panel-2); border-radius:4px; overflow:visible; }
+  .tornado-bar{ position:absolute; top:0; height:100%; border-radius:4px; }
+  .tornado-bar.neg-bar{ background:var(--red); opacity:0.55; }
+  .tornado-bar.pos-bar{ background:var(--green); opacity:0.55; }
+  .tornado-mid{ position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text-dim); left:50%; }
+  .tornado-row .impact{ font-family:var(--mono); font-size:11px; text-align:right; color:var(--text-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="brand-logo" viewBox="0 0 400 132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ENAMI Empresa Nacional de Minería">
+<g transform="translate(0.000000,132.000000) scale(0.100000,-0.100000)"
+fill="#993921" stroke="none">
+<path d="M275 1008 c-8 -22 -185 -552 -185 -555 0 -2 112 -3 249 -3 l249 0 16
+47 c9 26 16 48 16 50 0 2 -54 3 -120 3 -66 0 -120 3 -120 7 0 4 10 37 22 74
+l22 68 119 3 120 3 13 45 c8 25 14 46 14 48 0 1 -52 2 -116 2 -89 0 -115 3
+-112 13 3 6 13 36 22 65 l18 52 123 0 123 0 15 45 16 45 -250 0 c-191 0 -251
+-3 -254 -12z M741 748 c-50 -150 -91 -279 -91 -286 0 -9 31 -12 119 -12 l119
+0 62 186 c34 102 66 184 70 182 4 -2 74 -85 155 -185 l146 -183 72 0 72 0 95
+285 96 286 -95 -3 -95 -3 -60 -183 c-33 -100 -64 -181 -68 -180 -5 2 -64 84
+-131 183 l-124 180 -125 3 -126 3 -91 -273z M1765 735 l-277 -285 95 0 c111 0
+73 -29 300 222 78 86 143 155 144 154 2 -1 86 -313 142 -523 l12 -43 119 0
+c66 0 120 3 120 8 0 4 -50 175 -112 380 l-112 372 -77 0 -76 0 -278 -285z
+M2512 789 l-139 -231 44 -136 c24 -76 46 -143 48 -151 3 -8 75 103 163 252 86
+146 159 263 163 259 3 -4 16 -45 28 -92 12 -47 31 -120 42 -162 l21 -78 37 0
+c34 1 46 12 195 170 88 94 161 169 163 167 2 -2 -4 -64 -12 -138 -8 -74 -15
+-149 -15 -166 l0 -33 90 0 89 0 5 33 c3 17 12 124 21 237 8 113 18 226 21 253
+l6 47 -70 0 -70 0 -167 -175 c-92 -96 -170 -175 -174 -175 -4 0 -31 79 -60
+175 l-54 175 -118 0 -118 0 -139 -231z M3571 747 c-50 -149 -91 -278 -91 -285
+0 -9 31 -12 119 -12 l119 0 95 285 95 285 -123 0 -123 0 -91 -273z M90 315 c0
+-54 1 -55 28 -54 23 2 24 2 5 6 -14 3 -23 12 -23 23 0 11 9 20 23 23 l22 4
+-22 2 c-25 1 -33 31 -9 31 8 0 18 5 21 10 4 6 -5 10 -19 10 -25 0 -26 -3 -26
+-55z M277 364 c-4 -4 -6 -30 -6 -58 1 -28 4 -42 6 -32 3 11 15 27 27 37 17 14
+19 21 10 35 -12 20 -27 27 -37 18z m31 -26 c-6 -18 -28 -21 -28 -4 0 9 7 16
+16 16 9 0 14 -5 12 -12z M341 313 c0 -40 3 -52 9 -38 7 18 8 19 15 3 4 -10 11
+-18 17 -18 5 0 6 6 1 13 -4 6 -8 30 -8 52 0 30 -4 40 -17 43 -16 3 -18 -4 -17
+-55z m29 22 c0 -8 -4 -15 -10 -15 -5 0 -10 7 -10 15 0 8 5 15 10 15 6 0 10 -7
+10 -15z M410 315 c0 -51 2 -55 23 -54 16 1 18 2 5 6 -10 2 -18 13 -18 23 0 10
+8 21 18 23 16 4 16 5 0 6 -22 1 -24 31 -3 31 8 0 15 5 15 10 0 6 -9 10 -20 10
+-18 0 -20 -7 -20 -55z M487 363 c-14 -13 -6 -41 15 -55 27 -18 16 -42 -15 -32
+-21 6 -21 5 -5 -12 14 -14 20 -15 32 -4 21 17 20 29 -5 56 -21 22 -18 51 3 38
+7 -4 8 -2 4 4 -8 13 -19 15 -29 5z M681 314 c2 -53 2 -55 8 -19 l6 39 32 -39
+32 -40 -1 60 c-1 57 -1 58 -7 17 l-6 -43 -32 42 -33 43 1 -60z M886 354 c-34
+-34 -4 -114 38 -98 24 9 20 23 -5 17 -24 -7 -39 10 -39 44 0 24 27 43 49 35 8
+-3 11 0 7 7 -10 16 -32 14 -50 -5z M1005 346 c-30 -46 10 -110 54 -87 43 24
+28 111 -19 111 -11 0 -27 -11 -35 -24z m54 0 c7 -8 11 -27 9 -43 -2 -22 -8
+-28 -28 -28 -20 0 -26 6 -28 28 -3 27 12 57 28 57 4 0 13 -6 19 -14z M1302
+318 c-2 -49 1 -58 16 -58 11 0 13 3 5 8 -6 4 -13 30 -16 57 l-3 50 -2 -57z
+M1390 316 c0 -53 1 -56 25 -56 36 0 55 42 34 78 -8 15 -25 28 -37 30 -20 3
+-22 -1 -22 -52z m50 19 c16 -19 -2 -65 -25 -65 -11 0 -15 11 -15 40 0 43 17
+53 40 25z M1480 315 c0 -51 2 -55 23 -54 16 1 18 2 5 6 -10 2 -18 13 -18 23 0
+10 8 21 18 23 16 4 16 5 0 6 -22 1 -24 31 -3 31 8 0 15 5 15 10 0 6 -9 10 -20
+10 -18 0 -20 -7 -20 -55z M1703 315 c0 -33 2 -45 4 -27 2 18 2 45 0 60 -2 15
+-4 0 -4 -33z M1840 315 c0 -54 1 -55 28 -54 23 2 24 2 5 6 -14 3 -23 12 -23
+23 0 11 9 20 23 23 l22 4 -22 2 c-25 1 -32 31 -8 31 8 0 15 5 15 10 0 6 -9 10
+-20 10 -18 0 -20 -7 -20 -55z M1911 313 c1 -42 3 -51 8 -33 l7 25 8 -22 c4
+-13 12 -23 17 -23 6 0 6 8 -1 20 -7 13 -7 26 -1 38 11 21 -3 52 -24 52 -12 0
+-15 -13 -14 -57z m29 22 c0 -8 -4 -15 -10 -15 -5 0 -10 7 -10 15 0 8 5 15 10
+15 6 0 10 -7 10 -15z M1983 315 c0 -33 2 -45 4 -27 2 18 2 45 0 60 -2 15 -4 0
+-4 -33z M171 355 c-1 -5 -6 -29 -10 -52 -5 -24 -4 -43 0 -43 5 0 9 15 9 33 l1
+32 19 -35 18 -35 7 28 c9 35 25 35 25 0 0 -14 3 -24 6 -20 4 3 3 28 -1 54 l-8
+48 -17 -38 -17 -38 -16 38 c-8 21 -16 34 -16 28z M577 353 c-17 -27 -35 -93
+-27 -93 6 0 10 7 10 15 0 21 30 19 47 -2 13 -16 13 -16 7 7 -14 53 -30 84 -37
+73z m9 -50 c-10 -10 -19 5 -10 18 6 11 8 11 12 0 2 -7 1 -15 -2 -18z M796 314
+c-9 -26 -14 -50 -11 -52 2 -3 7 3 11 12 8 20 33 21 40 1 4 -8 10 -15 14 -15 8
+0 -20 83 -32 95 -3 3 -13 -15 -22 -41z m34 -5 c0 -5 -4 -9 -10 -9 -5 0 -10 7
+-10 16 0 8 5 12 10 9 6 -3 10 -10 10 -16z M963 310 c0 -30 2 -43 4 -27 2 15 2
+39 0 55 -2 15 -4 2 -4 -28z M1111 310 c2 -52 2 -53 8 -16 l6 40 25 -37 c14
+-20 28 -37 33 -37 4 0 7 23 7 50 0 28 -4 50 -10 50 -5 0 -10 -16 -10 -36 l0
+-37 -22 29 c-12 16 -25 33 -30 39 -4 5 -7 -16 -7 -45z M1238 354 c-15 -24 -35
+-94 -27 -94 5 0 9 7 9 15 0 21 30 19 47 -2 13 -16 13 -16 7 7 -13 49 -30 84
+-36 74z m8 -51 c-10 -10 -19 5 -10 18 6 11 8 11 12 0 2 -7 1 -15 -2 -18z
+M1601 355 c-1 -5 -6 -29 -10 -52 -5 -24 -4 -43 0 -43 5 0 9 15 9 33 l1 32 19
+-35 18 -35 7 28 c9 35 25 35 25 0 0 -14 3 -24 6 -20 4 3 3 28 -1 54 l-8 48
+-17 -38 -17 -38 -16 38 c-8 21 -16 34 -16 28z M1742 310 c1 -51 1 -52 7 -16
+l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
+-14 -7 -37 l4 -36 -33 39 -33 39 2 -55z M2026 314 c-9 -26 -14 -50 -11 -52 2
+-3 7 3 11 12 8 20 33 21 40 1 4 -8 10 -15 14 -15 8 0 -20 83 -32 95 -3 3 -13
+-15 -22 -41z m34 -5 c0 -5 -4 -9 -10 -9 -5 0 -10 7 -10 16 0 8 5 12 10 9 6 -3
+10 -10 10 -16z"/>
+</g>
+</svg>
+  <p class="eyebrow">Planta de Beneficio · Maquila</p>
+  <h1>Calculador de Margen de Planta</h1>
+  <p class="sub">Ingresa tonelajes y leyes de alimentación por etapa, recuperaciones metalúrgicas, un costo de planta estimado y los precios de metales. El margen se recalcula al instante.</p>
+  <div class="ben-cards" id="benCards">
+    <div class="ben-card general">
+      <div class="lbl">Mezcla Global — Cobre</div>
+      <div class="gen-block">
+        <div class="gen-row"><span class="k">Ley Cabeza</span><span class="v" id="genLeyCabeza">—</span></div>
+        <div class="gen-row"><span class="k">Recuperación</span><span class="v" id="genRecuperacion">—</span></div>
+        <div class="gen-row"><span class="k">Ley Concentrado</span><span class="v" id="genLeyConc">—</span></div>
+      </div>
+    </div>
+    <div class="ben-card tarifa">
+      <div class="lbl">Tonelaje Cobre Tarifa</div>
+      <div class="val" id="benTarifaTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benTarifaPct">—</div>
+    </div>
+    <div class="ben-card mina">
+      <div class="lbl">Tonelaje Cobre Mina</div>
+      <div class="val" id="benMinaTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benMinaPct">—</div>
+    </div>
+    <div class="ben-card barridos">
+      <div class="lbl">Tonelaje Barridos</div>
+      <div class="val" id="benBarridosTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benBarridosPct">—</div>
+    </div>
+    <div class="ben-card oro">
+      <div class="lbl">Tonelaje Oro</div>
+      <div class="val" id="benOroTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benOroPct">—</div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" id="tabBtnCalc" onclick="showTab('calc')">Calculador</button>
+  <button class="tab-btn" id="tabBtnSens" onclick="showTab('sens')">Sensibilización</button>
+</div>
+
+<div id="panel-calc" class="panel active">
+
+  <section class="card" style="margin-bottom:20px;">
+    <h2><span class="idx">E</span> Escenarios Guardados</h2>
+    <p class="desc">Guarda una foto de todos los valores actuales para comparar más tarde, o volver a cargarlos con un clic. Se mantienen mientras esta pestaña del navegador siga abierta.</p>
+    <div class="scen-bar">
+      <input type="text" id="scenName" placeholder="Nombre del escenario (ej: Mayo 2026 real)">
+      <button class="scen-save-btn" onclick="saveScenario()">Guardar escenario actual</button>
+    </div>
+    <div id="scenList"><div class="scen-empty">Aún no hay escenarios guardados.</div></div>
+  </section>
+
+  <!-- ===================== INGRESO ===================== -->
+  <section class="card">
+    <h2><span class="idx">A</span> Ingreso por Cargo de Tratamiento</h2>
+    <p class="desc">Tonelaje que pasa por cada etapa, valorizado a la tarifa de maquila pactada (US$/TMS). Los Barridos no llevan cargo de tratamiento — se valorizan aparte, como venta directa de concentrado (sección D).</p>
+    <div class="row" style="border-bottom:1px solid var(--line); padding-bottom:8px;">
+      <div class="colhead">Etapa</div><div class="colhead">Tonelaje (tms)</div><div class="colhead">Tarifa US$/TMS</div><div class="colhead" style="text-align:right;">Ingreso US$</div>
+    </div>
+    <div class="row">
+      <div class="name">Recepción / Compra</div>
+      <input type="number" id="ton_recepcion" value="67112.315" step="1">
+      <input type="number" id="tarifa_recepcion" value="7.17" step="0.01">
+      <div class="subtotal" id="ing_recepcion">—</div>
+    </div>
+    <div class="row">
+      <div class="name">Chancado</div>
+      <input type="number" id="ton_chancado" value="75016.478" step="1">
+      <input type="number" id="tarifa_chancado" value="6.75" step="0.01">
+      <div class="subtotal" id="ing_chancado">—</div>
+    </div>
+    <div class="row">
+      <div class="name">Beneficio Cobre <small>Tarifa</small></div>
+      <input type="number" id="ton_cutarifa" value="23478.871" step="1">
+      <input type="number" id="tarifa_cutarifa" value="27.50" step="0.01">
+      <div class="subtotal" id="ing_cutarifa">—</div>
+    </div>
+    <div class="row">
+      <div class="name">Beneficio Cobre <small>Mina</small></div>
+      <input type="number" id="ton_cumina" value="32074.389" step="1">
+      <input type="number" id="tarifa_cumina" value="27.50" step="0.01">
+      <div class="subtotal" id="ing_cumina">—</div>
+    </div>
+    <div class="row">
+      <div class="name">Beneficio Oro <small>solo si hay concentrado propio</small></div>
+      <input type="number" id="ton_au" value="4034.17" step="1">
+      <input type="number" id="tarifa_au" value="27.78" step="0.01">
+      <div class="subtotal" id="ing_au">—</div>
+    </div>
+    <div class="miniresult"><span class="l">Total Ingreso</span><span class="v" id="total_ingreso">US$ 0</span></div>
+  </section>
+
+  <div class="grid2">
+    <!-- ===================== COSTOS ===================== -->
+    <section class="card">
+      <h2><span class="idx">B</span> Costo de Planta Estimado</h2>
+      <p class="desc">Costo operativo total estimado, por etapa. Gastos Administrativos se descuenta al final, sobre el resultado consolidado (no sobre el Margen Proceso).</p>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr;">
+        <div class="name">Costo Recepción</div>
+        <input type="number" id="costo_recepcion" value="334796.1" step="1000">
+      </div>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr;">
+        <div class="name">Costo Chancado</div>
+        <input type="number" id="costo_chancado" value="381728.74" step="1000">
+      </div>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr;">
+        <div class="name">Costo Beneficio</div>
+        <input type="number" id="costo_flotacion" value="925878.11" step="1000">
+      </div>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr;">
+        <div class="name">Gastos Administrativos</div>
+        <input type="number" id="gastos_admin" value="85395" step="1000">
+      </div>
+      <div class="miniresult"><span class="l">Total Costos Operativos <small style="display:block;color:var(--text-dim);font-weight:400;">Recepción + Chancado + Beneficio</small></span><span class="v" id="total_costos">US$ 0</span></div>
+      <div class="miniresult"><span class="l">Margen Proceso <small style="display:block;color:var(--text-dim);font-weight:400;">Ingreso − Costos Operativos</small></span><span class="v" id="margen_proceso">US$ 0</span></div>
+    </section>
+
+    <!-- ===================== PRECIOS ===================== -->
+    <section class="card">
+      <h2><span class="idx">C</span> Precios de Metales</h2>
+      <p class="desc">Precio de liquidación del periodo, y cargos/descuentos comunes a todas las líneas.</p>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
+        <div class="name">Cobre</div><input type="number" id="precio_cu" value="612.673" step="1"><div class="unit">cUS$/lb</div>
+      </div>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
+        <div class="name">Oro</div><input type="number" id="precio_au" value="4585.287" step="1"><div class="unit">US$/oz</div>
+      </div>
+      <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
+        <div class="name">Plata</div><input type="number" id="precio_ag" value="77.83395" step="0.1"><div class="unit">US$/oz</div>
+      </div>
+      <details class="adv">
+        <summary>Cargos, descuentos y factores (comunes a todas las líneas)</summary>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr 0.8fr;">
+          <div class="name">Cargo Fusión Cu <small>por conc. Cu</small></div><input type="number" id="cf_cu" value="43" step="1"><div class="unit">US$/Tms</div>
+          <div class="name" style="grid-column:1;">Cargo Fusión Au <small>por conc. Au</small></div><input type="number" id="cf_au" value="43" step="1"><div class="unit">US$/Tms</div>
+          <div class="name" style="grid-column:1;">Cargo Refinación Cu</div><input type="number" id="cr_cu" value="4.3" step="0.1"><div class="unit">cUS$/lb</div>
+          <div class="name" style="grid-column:1;">Descuento Metalúrgico Cu</div><input type="number" id="dm_cu" value="3.8" step="0.1"><div class="unit">%</div>
+          <div class="name" style="grid-column:1;">Cargo Refinación Ag</div><input type="number" id="cr_ag" value="0.365" step="0.01"><div class="unit">US$/oz</div>
+          <div class="name" style="grid-column:1;">Descuento Metalúrgico Ag</div><input type="number" id="dm_ag" value="4" step="0.1"><div class="unit">%</div>
+          <div class="name" style="grid-column:1;">Cargo Refinación Au</div><input type="number" id="cr_au" value="6" step="0.1"><div class="unit">US$/oz</div>
+          <div class="name" style="grid-column:1;">Descuento Metalúrgico Au</div><input type="number" id="dm_au" value="4" step="0.1"><div class="unit">%</div>
+          <div class="name" style="grid-column:1;">Factor Ka <small>tmf→cUS$/lb</small></div><input type="number" id="ka" value="22.046223" step="0.000001"><div class="unit"></div>
+          <div class="name" style="grid-column:1;">Factor Kb <small>kgf→US$/oz</small></div><input type="number" id="kb" value="31.10348" step="0.00001"><div class="unit"></div>
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <!-- ===================== MARGEN METALURGICO ===================== -->
+  <section class="card">
+    <h2><span class="idx">D</span> Margen Metalúrgico y Barridos</h2>
+    <p class="desc">Cada línea de Beneficio compara el valor de los finos con la <b>ley de concentrado y recuperación pactada</b> (contrato) contra la <b>realmente obtenida en planta</b>. Los Barridos se valorizan directo, sin comparación contractual.</p>
+
+    <div class="grid2">
+      <!-- CU TARIFA -->
+      <div class="lineblock" id="block_cutarifa">
+        <h3>Beneficio Cobre — Tarifa</h3>
+        <span class="tag">tonelaje = Beneficio Cu Tarifa (sección A). Fino de Oro (Beneficio Oro) se agrega a la valorización.</span>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
+          <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
+        </div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre %</div><input type="number" id="leyCu_t" value="1.76749129" step="0.00000001"><input type="number" id="recCu_t" value="74.67074872" step="0.00000001"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Plata gr/ton</div><input type="number" id="leyAg_t" value="3.764959567" step="0.000000001"><input type="number" id="recAg_t" value="80.65" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Oro gr/ton</div><input type="number" id="leyAu_t" value="0.474554334" step="0.000000001"><input type="number" id="recAu_t" value="39.74" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley Concentrado Cu <small>real obtenida</small></div><input type="number" id="leyConcR_t" value="18.54592823" step="0.00000001"></div>
+        <details class="adv"><summary>Pactado en contrato</summary>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="colhead">&nbsp;</div><div class="colhead">Rec. pactada %</div><div class="colhead">Ley conc. pactada</div></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre</div><input type="number" id="recCuC_t" value="90.98" step="0.1"><input type="number" id="leyConcC_t" value="26.21" step="0.01"></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Plata</div><input type="number" id="recAgC_t" value="60" step="0.1"></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Oro</div><input type="number" id="recAuC_t" value="60" step="0.1"></div>
+        </details>
+        <div class="miniresult"><span class="l">Margen Metalúrgico</span><span class="v" id="margen_t">US$ 0</span></div>
+      </div>
+
+      <!-- CU MINA -->
+      <div class="lineblock" id="block_cumina">
+        <h3>Beneficio Cobre — Mina</h3>
+        <span class="tag">tonelaje tomado de sección A</span>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
+          <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
+        </div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre %</div><input type="number" id="leyCu_m" value="0.739022651" step="0.00000001"><input type="number" id="recCu_m" value="52.24" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Plata gr/ton</div><input type="number" id="leyAg_m" value="0" step="0.1"><input type="number" id="recAg_m" value="0" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Oro gr/ton</div><input type="number" id="leyAu_m" value="0" step="0.01"><input type="number" id="recAu_m" value="0" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley Concentrado Cu <small>real obtenida</small></div><input type="number" id="leyConcR_m" value="18.55" step="0.01"></div>
+        <details class="adv"><summary>Pactado en contrato</summary>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="colhead">&nbsp;</div><div class="colhead">Rec. pactada %</div><div class="colhead">Ley conc. pactada</div></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre</div><input type="number" id="recCuC_m" value="88" step="0.1"><input type="number" id="leyConcC_m" value="26.21" step="0.01"></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Plata</div><input type="number" id="recAgC_m" value="60" step="0.1"></div>
+          <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Oro</div><input type="number" id="recAuC_m" value="60" step="0.1"></div>
+        </details>
+        <div class="miniresult"><span class="l">Margen Metalúrgico</span><span class="v" id="margen_m">US$ 0</span></div>
+      </div>
+
+      <!-- BARRIDOS -->
+      <div class="lineblock" id="block_barridos">
+        <h3>Beneficio Cobre — Barridos</h3>
+        <span class="tag">venta directa de concentrado, sin comparación contractual</span>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Beneficio <small>tonelaje, tms</small></div><input type="number" id="ton_b" value="495.39" step="1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley <small>cabeza Cu, %</small></div><input type="number" id="leyCu_b" value="1.66" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Recuperación <small>%</small></div><input type="number" id="recCu_b" value="51" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley de Concentrado <small>%</small></div><input type="number" id="leyConc_b" value="18.55" step="0.01"></div>
+        <div class="miniresult"><span class="l">Margen Barridos (venta directa)</span><span class="v" id="margen_b">US$ 0</span></div>
+      </div>
+
+    </div>
+
+    <p class="desc" style="margin-top:14px;">El Beneficio Oro no tiene margen metalúrgico propio ni entra al cálculo del margen de cobre: solo genera Ingreso por cargo de tratamiento (sección A). El fino de oro que sí se valoriza dentro del margen metalúrgico de Tarifa es el que aporta la propia ley de oro de esa línea (fila "Oro gr/ton" del bloque Tarifa), como subproducto del concentrado de cobre.</p>
+
+    <div class="miniresult" style="margin-top:16px;"><span class="l">Margen Metalúrgico Total <small style="display:block;color:var(--text-dim);font-weight:400;">Tarifa (incl. Oro) + Mina</small></span><span class="v" id="margen_met_total">US$ 0</span></div>
+  </section>
+
+</div>
+
+<div id="panel-sens" class="panel">
+  <div class="sens-grid">
+    <section class="card">
+      <h2><span class="idx">S</span> Variables a Sensibilizar</h2>
+      <p class="desc">Mueve una o varias variables (% respecto al valor base de la pestaña Calculador) y observa el efecto combinado en el Margen de Planta.</p>
+      <div id="sliderList"></div>
+      <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+        <button class="reset-btn" onclick="resetSliders()">Restablecer a base</button>
+      </div>
+    </section>
+
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <section class="card">
+        <h2><span class="idx">R</span> Resultado del Escenario</h2>
+        <p class="desc">Comparación entre el caso base (pestaña Calculador) y el escenario con los ajustes de la izquierda.</p>
+        <div class="scenario-box">
+          <div class="row2"><span class="l">Margen de Planta — Base</span><span class="v" id="sens_base">US$ 0</span></div>
+          <div class="row2"><span class="l">Margen de Planta — Escenario</span><span class="v" id="sens_escenario">US$ 0</span></div>
+          <div class="row2 total"><span class="l">Diferencia</span><span class="v" id="sens_delta">US$ 0</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="idx">T</span> Tornado de Sensibilidad</h2>
+        <p class="desc">Impacto individual de mover cada variable ±10% desde su valor base, dejando las demás fijas. Ordenado de mayor a menor impacto.</p>
+        <div id="tornadoList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="sticky">
+  <div class="sticky-inner">
+    <div class="breakdown">
+      <div class="item">Ingreso<b id="s_ingreso">US$ 0</b></div>
+      <div class="item">Costos<b id="s_costos">US$ 0</b></div>
+      <div class="item">Margen Proceso<b id="s_mproc">US$ 0</b></div>
+      <div class="item">Margen Metalúrgico<b id="s_mmet">US$ 0</b></div>
+      <div class="item">Margen Barridos<b id="s_mbar">US$ 0</b></div>
+      <div class="item">Gastos Admin.<b id="s_admin">US$ 0</b></div>
+    </div>
+    <div class="hero"><div class="l">Margen de Planta</div><div class="v" id="s_total">US$ 0</div></div>
+  </div>
+</div>
+
+<footer class="note">
+  Modelo simplificado de referencia. La Ley de Concentrado "real" es editable en cada línea — si la dejas igual a la pactada, el margen refleja solo la diferencia de recuperación. Barridos se valoriza como venta directa de concentrado (con su propia ley de concentrado), sin comparación contractual. Gastos Administrativos se descuenta una sola vez, a nivel de planta.
+</footer>
+
+<script>
+function num(id){ const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+function fmt(n){ return (n<0? '-US$ ' : 'US$ ') + Math.abs(Math.round(n)).toLocaleString('es-CL'); }
+function fmt1(n){ return (n<0? '-US$ ' : 'US$ ') + Math.abs(Math.round(n)).toLocaleString('es-CL'); }
+function setVal(id, n, colorize){
+  const el = document.getElementById(id); el.textContent = fmt(n);
+  if(colorize){ el.classList.remove('pos','neg'); el.classList.add(n>=0?'pos':'neg'); }
+}
+
+// ---- Lee todos los inputs de la Calculadora (Tab 1) a un objeto plano ----
+function readParams(){
+  return {
+    ton_r:num('ton_recepcion'), tar_r:num('tarifa_recepcion'),
+    ton_c:num('ton_chancado'), tar_c:num('tarifa_chancado'),
+    ton_t:num('ton_cutarifa'), tar_t:num('tarifa_cutarifa'),
+    ton_m:num('ton_cumina'), tar_m:num('tarifa_cumina'),
+    ton_o:num('ton_au'), tar_o:num('tarifa_au'),
+    costoRecepcion:num('costo_recepcion'), costoChancado:num('costo_chancado'), costoBeneficio:num('costo_flotacion'),
+    gastosAdmin:num('gastos_admin'),
+    Pcu:num('precio_cu'), Pau:num('precio_au'), Pag:num('precio_ag'),
+    CFcu:num('cf_cu'), CFau:num('cf_au'),
+    CRcu:num('cr_cu'), DMcu:num('dm_cu'), CRag:num('cr_ag'), DMag:num('dm_ag'), CRau:num('cr_au'), DMau:num('dm_au'),
+    Ka:num('ka'), Kb:num('kb'),
+    leyCu_t:num('leyCu_t'), leyAg_t:num('leyAg_t'), leyAu_t:num('leyAu_t'),
+    recCu_t:num('recCu_t'), recAg_t:num('recAg_t'), recAu_t:num('recAu_t'),
+    recCuC_t:num('recCuC_t'), recAgC_t:num('recAgC_t'), recAuC_t:num('recAuC_t'),
+    leyConcC_t:num('leyConcC_t'), leyConcR_t:num('leyConcR_t'),
+    leyCu_m:num('leyCu_m'), leyAg_m:num('leyAg_m'), leyAu_m:num('leyAu_m'),
+    recCu_m:num('recCu_m'), recAg_m:num('recAg_m'), recAu_m:num('recAu_m'),
+    recCuC_m:num('recCuC_m'), recAgC_m:num('recAgC_m'), recAuC_m:num('recAuC_m'),
+    leyConcC_m:num('leyConcC_m'), leyConcR_m:num('leyConcR_m'),
+    ton_b:num('ton_b'), leyCu_b:num('leyCu_b'), recCu_b:num('recCu_b'), leyConc_b:num('leyConc_b')
+  };
+}
+
+// ---- Modelo puro: recibe un objeto de parámetros, devuelve todos los resultados ----
+function computeModel(P){
+  const ing_r=P.ton_r*P.tar_r, ing_c=P.ton_c*P.tar_c, ing_t=P.ton_t*P.tar_t, ing_m=P.ton_m*P.tar_m, ing_o=P.ton_o*P.tar_o;
+  const ingresoTotal = ing_r+ing_c+ing_t+ing_m+ing_o;
+
+  const costosTotal = P.costoRecepcion + P.costoChancado + P.costoBeneficio;
+  const margenProceso = ingresoTotal - costosTotal;
+
+  const DMcu=P.DMcu/100, DMag=P.DMag/100, DMau=P.DMau/100;
+
+  function valorFinos(psm, leyCu_pct, leyAg_gt, leyAu_gt, recCu_pct, recAg_pct, recAu_pct, leyConcPrimary, tipo){
+    const Fcum = psm*leyCu_pct/100;
+    const Fagm = psm*leyAg_gt/1000;
+    const Faum = psm*leyAu_gt/1000;
+    const Fcuc = Fcum*recCu_pct/100;
+    const Fagc = Fagm*recAg_pct/100;
+    const Fauc = Faum*recAu_pct/100;
+    let PSC = 0;
+    if(tipo==='Cu'){ PSC = leyConcPrimary>0 ? Fcuc/(leyConcPrimary/100) : 0; }
+    else { PSC = leyConcPrimary>0 ? (Fauc*1000)/leyConcPrimary : 0; }
+    const vCu = Fcuc*(1-DMcu)*P.Ka*(P.Pcu-P.CRcu) - (tipo==='Cu'? P.CFcu*PSC : 0);
+    const vAg = Fagc*(1-DMag)*(1000/P.Kb)*(P.Pag-P.CRag);
+    const vAu = Fauc*(1-DMau)*(1000/P.Kb)*(P.Pau-P.CRau) - (tipo==='Au'? P.CFau*PSC : 0);
+    return vCu+vAg+vAu;
+  }
+
+  function margenLinea(psm, leyCu, leyAg, leyAu, recCu, recAg, recAu, recCuC, recAgC, recAuC, leyConcC, leyConcR, tipo){
+    const vContrato = valorFinos(psm, leyCu, leyAg, leyAu, recCuC, recAgC, recAuC, leyConcC, tipo);
+    const vPlanta   = valorFinos(psm, leyCu, leyAg, leyAu, recCu,  recAg,  recAu,  leyConcR, tipo);
+    return vPlanta - vContrato;
+  }
+
+  const margen_t = margenLinea(P.ton_t, P.leyCu_t, P.leyAg_t, P.leyAu_t, P.recCu_t, P.recAg_t, P.recAu_t, P.recCuC_t, P.recAgC_t, P.recAuC_t, P.leyConcC_t, P.leyConcR_t, 'Cu');
+  const margen_m = margenLinea(P.ton_m, P.leyCu_m, P.leyAg_m, P.leyAu_m, P.recCu_m, P.recAg_m, P.recAu_m, P.recCuC_m, P.recAgC_m, P.recAuC_m, P.leyConcC_m, P.leyConcR_m, 'Cu');
+  const margenMetTotal = margen_t + margen_m;
+
+  const margenBarridos = valorFinos(P.ton_b, P.leyCu_b, 0, 0, P.recCu_b, 0, 0, P.leyConc_b, 'Cu');
+
+  const margenPlanta = margenProceso + margenMetTotal + margenBarridos - P.gastosAdmin;
+
+  return { ing_r, ing_c, ing_t, ing_m, ing_o, ingresoTotal, costosTotal, margenProceso, margen_t, margen_m, margenMetTotal, margenBarridos, margenPlanta };
+}
+
+function calc(){
+  const P = readParams();
+  const R = computeModel(P);
+
+  setVal('ing_recepcion',R.ing_r); setVal('ing_chancado',R.ing_c);
+  setVal('ing_cutarifa',R.ing_t); setVal('ing_cumina',R.ing_m); setVal('ing_au',R.ing_o);
+  setVal('total_ingreso', R.ingresoTotal);
+  setVal('total_costos', R.costosTotal);
+  setVal('margen_proceso', R.margenProceso, true);
+  setVal('margen_t', R.margen_t, true);
+  setVal('margen_m', R.margen_m, true);
+  setVal('margen_met_total', R.margenMetTotal, true);
+  setVal('margen_b', R.margenBarridos, true);
+
+  // ---- Mezcla Global de Cobre: ley de cabeza, recuperación y ley de concentrado ponderadas por fino ----
+  const Fcum_t = P.ton_t*P.leyCu_t/100, Fcum_m = P.ton_m*P.leyCu_m/100;
+  const Fcuc_t = Fcum_t*P.recCu_t/100, Fcuc_m = Fcum_m*P.recCu_m/100;
+  const PSC_t = P.leyConcR_t>0 ? Fcuc_t/(P.leyConcR_t/100) : 0;
+  const PSC_m = P.leyConcR_m>0 ? Fcuc_m/(P.leyConcR_m/100) : 0;
+  const tonBenCu = P.ton_t + P.ton_m;
+  const finoTotal = Fcum_t + Fcum_m;
+  const finoConcTotal = Fcuc_t + Fcuc_m;
+  const pscTotal = PSC_t + PSC_m;
+  const leyCabezaPond = tonBenCu>0 ? finoTotal/tonBenCu*100 : 0;
+  const recPond = finoTotal>0 ? finoConcTotal/finoTotal*100 : 0;
+  const leyConcPond = pscTotal>0 ? finoConcTotal/pscTotal*100 : 0;
+  document.getElementById('genLeyCabeza').textContent = leyCabezaPond.toFixed(3)+'% Cu';
+  document.getElementById('genRecuperacion').textContent = recPond.toFixed(2)+'%';
+  document.getElementById('genLeyConc').textContent = leyConcPond.toFixed(2)+'% Cu';
+
+  const totalBen = P.ton_t + P.ton_m + P.ton_b + P.ton_o;
+  const pctFmt = (v)=> totalBen>0 ? (v/totalBen*100).toFixed(1)+'%' : '—';
+  document.getElementById('benTarifaTon').innerHTML = P.ton_t.toLocaleString('es-CL')+'<span class="unit">tms</span>';
+  document.getElementById('benTarifaPct').textContent = pctFmt(P.ton_t);
+  document.getElementById('benMinaTon').innerHTML = P.ton_m.toLocaleString('es-CL')+'<span class="unit">tms</span>';
+  document.getElementById('benMinaPct').textContent = pctFmt(P.ton_m);
+  document.getElementById('benBarridosTon').innerHTML = P.ton_b.toLocaleString('es-CL')+'<span class="unit">tms</span>';
+  document.getElementById('benBarridosPct').textContent = pctFmt(P.ton_b);
+  document.getElementById('benOroTon').innerHTML = P.ton_o.toLocaleString('es-CL')+'<span class="unit">tms</span>';
+  document.getElementById('benOroPct').textContent = pctFmt(P.ton_o);
+
+  setVal('s_ingreso', R.ingresoTotal);
+  setVal('s_costos', R.costosTotal);
+  setVal('s_mproc', R.margenProceso, true);
+  setVal('s_mmet', R.margenMetTotal, true);
+  setVal('s_mbar', R.margenBarridos, true);
+  setVal('s_admin', P.gastosAdmin);
+  const heroEl = document.getElementById('s_total');
+  heroEl.textContent = fmt(R.margenPlanta);
+  heroEl.style.color = R.margenPlanta>=0 ? 'var(--green)' : 'var(--red)';
+
+  renderSensitivity(P, R);
+}
+
+// ================= SENSIBILIZACIÓN =================
+const SENS_VARS = [
+  {key:'ton_r', label:'Tonelaje Recepción', unit:'tms'},
+  {key:'ton_c', label:'Tonelaje Chancado', unit:'tms'},
+  {key:'ton_t', label:'Tonelaje Beneficio Tarifa', unit:'tms'},
+  {key:'ton_m', label:'Tonelaje Beneficio Mina', unit:'tms'},
+  {key:'ton_o', label:'Tonelaje Beneficio Oro', unit:'tms'},
+  {key:'ton_b', label:'Tonelaje Barridos', unit:'tms'},
+  {key:'Pcu', label:'Precio Cobre', unit:'cUS$/lb'},
+  {key:'Pau', label:'Precio Oro', unit:'US$/oz'},
+  {key:'Pag', label:'Precio Plata', unit:'US$/oz'},
+  {key:'recCu_t', label:'Recuperación Cu Tarifa', unit:'%'},
+  {key:'recCu_m', label:'Recuperación Cu Mina', unit:'%'},
+  {key:'leyConcR_t', label:'Ley Concentrado Real Tarifa', unit:'%'},
+  {key:'leyConcR_m', label:'Ley Concentrado Real Mina', unit:'%'},
+  {key:'costoBeneficio', label:'Costo Beneficio', unit:'US$'},
+];
+const sliderState = {}; SENS_VARS.forEach(v=>sliderState[v.key]=0);
+let slidersBuilt = false;
+let lastParams = null;
+
+function round3(v){ return Math.round(v*1000)/1000; }
+
+function fmtVal(v, unit){
+  if(unit==='%') return v.toFixed(2)+'%';
+  if(unit==='US$') return 'US$ '+Math.round(v).toLocaleString('es-CL');
+  return v.toLocaleString('es-CL', {maximumFractionDigits:3})+' '+unit;
+}
+
+function buildSliders(){
+  const container = document.getElementById('sliderList');
+  container.innerHTML = '';
+  SENS_VARS.forEach(v=>{
+    const row = document.createElement('div');
+    row.className='slider-row';
+    row.innerHTML =
+      '<div class="top"><span class="name">'+v.label+'</span><span class="delta" id="delta_'+v.key+'">0%</span></div>'+
+      '<input type="range" min="-50" max="50" step="1" value="0" id="slider_'+v.key+'">'+
+      '<div class="vals"><span class="basev" id="baseval_'+v.key+'">base: —</span>'+
+      '<input type="number" class="newval-input" id="newval_'+v.key+'" title="Ingresa el valor nuevo directamente"></div>';
+    container.appendChild(row);
+  });
+  SENS_VARS.forEach(v=>{
+    document.getElementById('slider_'+v.key).addEventListener('input', (e)=>{
+      sliderState[v.key] = parseFloat(e.target.value);
+      calc();
+    });
+    document.getElementById('newval_'+v.key).addEventListener('input', (e)=>{
+      const typed = parseFloat(e.target.value);
+      if(isNaN(typed)) return;
+      const base = lastParams ? lastParams[v.key] : 0;
+      if(base){
+        sliderState[v.key] = (typed/base - 1)*100;
+      }
+      const sl = document.getElementById('slider_'+v.key);
+      sl.value = Math.max(-50, Math.min(50, sliderState[v.key]));
+      calc();
+    });
+  });
+  slidersBuilt = true;
+}
+
+function resetSliders(){
+  SENS_VARS.forEach(v=>{
+    sliderState[v.key]=0;
+    const el=document.getElementById('slider_'+v.key);
+    if(el) el.value=0;
+  });
+  calc();
+}
+
+function renderSensitivity(P, R){
+  if(!slidersBuilt) buildSliders();
+  lastParams = P;
+
+  // ---- Escenario combinado: todos los sliders aplicados a la vez ----
+  const Pscenario = Object.assign({}, P);
+  SENS_VARS.forEach(v=>{
+    const pct = sliderState[v.key]/100;
+    const base = P[v.key];
+    Pscenario[v.key] = base*(1+pct);
+    const d = sliderState[v.key];
+    const dEl = document.getElementById('delta_'+v.key);
+    dEl.textContent = (d>=0?'+':'')+d.toFixed(1)+'%';
+    dEl.className = 'delta'+(d>0?' pos':d<0?' neg':'');
+    document.getElementById('baseval_'+v.key).textContent = 'base: '+fmtVal(base, v.unit);
+    const newvalEl = document.getElementById('newval_'+v.key);
+    if(document.activeElement !== newvalEl){
+      newvalEl.value = round3(Pscenario[v.key]);
+    }
+  });
+  const Rscenario = computeModel(Pscenario);
+
+  const baseEl = document.getElementById('sens_base');
+  baseEl.textContent = fmt(R.margenPlanta); baseEl.className='v'+(R.margenPlanta>=0?' pos':' neg');
+  const escEl = document.getElementById('sens_escenario');
+  escEl.textContent = fmt(Rscenario.margenPlanta); escEl.className='v'+(Rscenario.margenPlanta>=0?' pos':' neg');
+  const delta = Rscenario.margenPlanta - R.margenPlanta;
+  const deltaEl = document.getElementById('sens_delta');
+  deltaEl.textContent = (delta>=0?'+':'-')+fmt(Math.abs(delta)).replace('US$ ','US$ ');
+  deltaEl.className='v'+(delta>=0?' pos':' neg');
+
+  // ---- Tornado: impacto de mover cada variable ±10% por separado, desde el caso base ----
+  const impacts = SENS_VARS.map(v=>{
+    const base = P[v.key];
+    const Pup = Object.assign({}, P); Pup[v.key] = base*1.10;
+    const Pdown = Object.assign({}, P); Pdown[v.key] = base*0.90;
+    const rUp = computeModel(Pup).margenPlanta;
+    const rDown = computeModel(Pdown).margenPlanta;
+    return { label:v.label, low:Math.min(rUp,rDown), high:Math.max(rUp,rDown), range: Math.abs(rUp-rDown) };
+  });
+  impacts.sort((a,b)=>b.range-a.range);
+  const maxRange = Math.max(...impacts.map(i=>i.range), 1);
+
+  const tornadoContainer = document.getElementById('tornadoList');
+  tornadoContainer.innerHTML = '';
+  impacts.forEach(i=>{
+    const lowSpan = Math.max(0, R.margenPlanta - i.low)/maxRange*50;
+    const highSpan = Math.max(0, i.high - R.margenPlanta)/maxRange*50;
+    const row = document.createElement('div');
+    row.className='tornado-row';
+    row.innerHTML =
+      '<div class="lbl">'+i.label+'</div>'+
+      '<div class="tornado-track"><div class="tornado-mid"></div>'+
+      '<div class="tornado-bar neg-bar" style="left:'+(50-lowSpan)+'%; width:'+lowSpan+'%"></div>'+
+      '<div class="tornado-bar pos-bar" style="left:50%; width:'+highSpan+'%"></div></div>'+
+      '<div class="impact">±'+fmt(i.range/2)+'</div>';
+    tornadoContainer.appendChild(row);
+  });
+}
+
+function showTab(name){
+  document.getElementById('panel-calc').classList.toggle('active', name==='calc');
+  document.getElementById('panel-sens').classList.toggle('active', name==='sens');
+  document.getElementById('tabBtnCalc').classList.toggle('active', name==='calc');
+  document.getElementById('tabBtnSens').classList.toggle('active', name==='sens');
+}
+
+// ================= ESCENARIOS GUARDADOS =================
+// Mapeo clave interna (readParams) -> id del input en el DOM
+const FIELD_ID_MAP = {
+  ton_r:'ton_recepcion', tar_r:'tarifa_recepcion',
+  ton_c:'ton_chancado', tar_c:'tarifa_chancado',
+  ton_t:'ton_cutarifa', tar_t:'tarifa_cutarifa',
+  ton_m:'ton_cumina', tar_m:'tarifa_cumina',
+  ton_o:'ton_au', tar_o:'tarifa_au',
+  costoRecepcion:'costo_recepcion', costoChancado:'costo_chancado', costoBeneficio:'costo_flotacion',
+  gastosAdmin:'gastos_admin',
+  Pcu:'precio_cu', Pau:'precio_au', Pag:'precio_ag',
+  CFcu:'cf_cu', CFau:'cf_au',
+  CRcu:'cr_cu', DMcu:'dm_cu', CRag:'cr_ag', DMag:'dm_ag', CRau:'cr_au', DMau:'dm_au',
+  Ka:'ka', Kb:'kb',
+  leyCu_t:'leyCu_t', leyAg_t:'leyAg_t', leyAu_t:'leyAu_t',
+  recCu_t:'recCu_t', recAg_t:'recAg_t', recAu_t:'recAu_t',
+  recCuC_t:'recCuC_t', recAgC_t:'recAgC_t', recAuC_t:'recAuC_t',
+  leyConcC_t:'leyConcC_t', leyConcR_t:'leyConcR_t',
+  leyCu_m:'leyCu_m', leyAg_m:'leyAg_m', leyAu_m:'leyAu_m',
+  recCu_m:'recCu_m', recAg_m:'recAg_m', recAu_m:'recAu_m',
+  recCuC_m:'recCuC_m', recAgC_m:'recAgC_m', recAuC_m:'recAuC_m',
+  leyConcC_m:'leyConcC_m', leyConcR_m:'leyConcR_m',
+  ton_b:'ton_b', leyCu_b:'leyCu_b', recCu_b:'recCu_b', leyConc_b:'leyConc_b'
+};
+
+let savedScenarios = [];
+let scenarioCounter = 0;
+
+function saveScenario(){
+  const nameInput = document.getElementById('scenName');
+  const name = nameInput.value.trim() || ('Escenario '+(++scenarioCounter));
+  const P = readParams();
+  const R = computeModel(P);
+  const now = new Date();
+  const time = now.toLocaleDateString('es-CL')+' '+now.toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+  savedScenarios.push({ id: Date.now(), name, time, params: P, margenPlanta: R.margenPlanta });
+  nameInput.value = '';
+  renderScenarioList();
+}
+
+function loadScenario(id){
+  const sc = savedScenarios.find(s=>s.id===id);
+  if(!sc) return;
+  Object.keys(sc.params).forEach(key=>{
+    const domId = FIELD_ID_MAP[key];
+    if(domId){
+      const el = document.getElementById(domId);
+      if(el) el.value = sc.params[key];
+    }
+  });
+  calc();
+  showTab('calc');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function deleteScenario(id){
+  savedScenarios = savedScenarios.filter(s=>s.id!==id);
+  renderScenarioList();
+}
+
+function renderScenarioList(){
+  const container = document.getElementById('scenList');
+  if(savedScenarios.length===0){
+    container.innerHTML = '<div class="scen-empty">Aún no hay escenarios guardados.</div>';
+    return;
+  }
+  container.innerHTML = '';
+  savedScenarios.slice().reverse().forEach(sc=>{
+    const row = document.createElement('div');
+    row.className='scen-row';
+    const cls = sc.margenPlanta>=0?'pos':'neg';
+    row.innerHTML =
+      '<div class="name">'+sc.name+'</div>'+
+      '<div class="time">'+sc.time+'</div>'+
+      '<div class="margin '+cls+'">'+fmt(sc.margenPlanta)+'</div>'+
+      '<button class="scen-load-btn">Cargar</button>'+
+      '<button class="scen-del-btn">Eliminar</button>';
+    row.querySelector('.scen-load-btn').addEventListener('click', ()=>loadScenario(sc.id));
+    row.querySelector('.scen-del-btn').addEventListener('click', ()=>deleteScenario(sc.id));
+    container.appendChild(row);
+  });
+}
+
+document.querySelectorAll('#panel-calc input').forEach(el=>el.addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>
