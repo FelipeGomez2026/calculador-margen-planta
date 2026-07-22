@@ -865,6 +865,51 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <p class="desc" style="margin-top:14px;">El badge junto a cada valor indica si, con los datos actuales, ese método ya está <span class="be-badge be-ok">sobre el equilibrio</span> o <span class="be-badge be-bad">bajo el equilibrio</span> en esta dimensión.</p>
     </section>
 
+    <section class="card">
+      <h2><span class="idx">PE2</span> Explorador de Punto de Equilibrio</h2>
+      <p class="desc">Prueba combinaciones libres de tonelaje por línea, precio y otros parámetros, y observa el resultado en vivo. Este panel es un espacio aparte — no modifica los valores de la pestaña Calculador.</p>
+
+      <div class="grid3">
+        <div class="lineblock">
+          <h3>Tonelajes</h3>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Cobre Tarifa <small>tms</small></div><input type="number" id="be2_ton_t" step="1"></div>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Cobre Mina <small>tms</small></div><input type="number" id="be2_ton_m" step="1"></div>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Oro <small>tms</small></div><input type="number" id="be2_ton_o" step="1"></div>
+          <div class="miniresult"><span class="l">Total Beneficio</span><span class="v" id="be2_ton_total">0 tms</span></div>
+        </div>
+        <div class="lineblock">
+          <h3>Precios</h3>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Cobre <small>cUS$/lb</small></div><input type="number" id="be2_precio_cu" step="1"></div>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Oro <small>US$/oz</small></div><input type="number" id="be2_precio_au" step="1"></div>
+        </div>
+        <div class="lineblock">
+          <h3>Ley y Recuperación — Cu Tarifa</h3>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Cabeza <small>%</small></div><input type="number" id="be2_leyCu_t" step="0.01"></div>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Recuperación Obtenida <small>%</small></div><input type="number" id="be2_recCu_t" step="0.1"></div>
+          <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Recuperación Pactada <small>% (Negocio)</small></div><input type="number" id="be2_recCu_neg" step="0.1"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+        <button class="reset-btn" onclick="resetBreakevenExplorer()">Cargar valores actuales del Calculador</button>
+      </div>
+
+      <div class="grid3" style="margin-top:16px;">
+        <div class="scenario-box">
+          <div class="row2"><span class="l">Maquila</span><span class="v" id="be2_maquila">US$ 0</span></div>
+          <div id="be2_maquila_badge"></div>
+        </div>
+        <div class="scenario-box">
+          <div class="row2"><span class="l">Negocio — Concentrado</span><span class="v" id="be2_conc">US$ 0</span></div>
+          <div id="be2_conc_badge"></div>
+        </div>
+        <div class="scenario-box">
+          <div class="row2"><span class="l">Negocio — Cátodos</span><span class="v" id="be2_cat">US$ 0</span></div>
+          <div id="be2_cat_badge"></div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 <div class="sticky">
@@ -1689,7 +1734,64 @@ function renderBreakeven(P){
   beCell('be_rec_maquila', beRec.maquila, x=>x.toFixed(2)+'%');
   beCell('be_rec_conc', beRec.concentrado, x=>x.toFixed(2)+'%');
   beCell('be_rec_cat', beRec.catodo, x=>x.toFixed(2)+'%');
+
+  if(!explorerInited){ resetBreakevenExplorer(); explorerInited = true; }
+  else { renderBreakevenExplorer(); }
 }
+
+// ---- Explorador paramétrico (espacio aparte, no toca el Calculador) ----
+let explorerInited = false;
+
+function resetBreakevenExplorer(){
+  const P = readParams();
+  const N = readNegocioParams();
+  document.getElementById('be2_ton_t').value = P.ton_t;
+  document.getElementById('be2_ton_m').value = P.ton_m;
+  document.getElementById('be2_ton_o').value = P.ton_o;
+  document.getElementById('be2_precio_cu').value = P.Pcu;
+  document.getElementById('be2_precio_au').value = P.Pau;
+  document.getElementById('be2_leyCu_t').value = P.leyCu_t;
+  document.getElementById('be2_recCu_t').value = P.recCu_t;
+  document.getElementById('be2_recCu_neg').value = N.recCu;
+  renderBreakevenExplorer();
+}
+
+function renderBreakevenExplorer(){
+  const P = readParams();
+  const N = readNegocioParams();
+  const P2 = Object.assign({}, P, {
+    ton_t: parseFloat(document.getElementById('be2_ton_t').value)||0,
+    ton_m: parseFloat(document.getElementById('be2_ton_m').value)||0,
+    ton_o: parseFloat(document.getElementById('be2_ton_o').value)||0,
+    Pcu: parseFloat(document.getElementById('be2_precio_cu').value)||0,
+    Pau: parseFloat(document.getElementById('be2_precio_au').value)||0,
+    leyCu_t: parseFloat(document.getElementById('be2_leyCu_t').value)||0,
+    recCu_t: parseFloat(document.getElementById('be2_recCu_t').value)||0,
+  });
+  const N2 = Object.assign({}, N, {
+    recCu: parseFloat(document.getElementById('be2_recCu_neg').value)||0,
+  });
+
+  document.getElementById('be2_ton_total').textContent = Math.round(P2.ton_t+P2.ton_m+P2.ton_o).toLocaleString('es-CL')+' tms';
+
+  const R2 = computeModel(P2);
+  const M2 = computeNegocioModel(P2, R2, N2);
+
+  function paint(valId, badgeId, valor){
+    const el = document.getElementById(valId);
+    el.textContent = fmt(valor); el.className='v'+(valor>=0?' pos':' neg');
+    const badge = document.getElementById(badgeId);
+    badge.innerHTML = valor>=0
+      ? '<span class="be-badge be-ok">sobre equilibrio, +'+fmt(valor)+'</span>'
+      : '<span class="be-badge be-bad">bajo equilibrio, faltan '+fmt(Math.abs(valor))+'</span>';
+  }
+  paint('be2_maquila','be2_maquila_badge', R2.margenPlanta);
+  paint('be2_conc','be2_conc_badge', M2.resultadoNegocio);
+  paint('be2_cat','be2_cat_badge', M2.resultadoCatodo);
+}
+
+document.querySelectorAll('#be2_ton_t, #be2_ton_m, #be2_ton_o, #be2_precio_cu, #be2_precio_au, #be2_leyCu_t, #be2_recCu_t, #be2_recCu_neg')
+  .forEach(el=>el && el.addEventListener('input', renderBreakevenExplorer));
 
 (async function initAuth(){
   if(!supabaseReady){
