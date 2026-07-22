@@ -1472,8 +1472,8 @@ function showTab(name){
 // 1) Crea un proyecto en https://supabase.com
 // 2) Ejecuta supabase_schema.sql en el SQL Editor de tu proyecto
 // 3) Reemplaza estos dos valores por los de tu proyecto (Settings > API)
-const SUPABASE_URL = 'TU_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://ubrbfsmglxyxinyjyrev.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVicmJmc21nbHh5eGlueWp5cmV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTkyMjQsImV4cCI6MjA5OTE5NTIyNH0.wg22CljBNIkR9YMwrYooGHSSNs1dcw2zJT_ZB9J_UC8';
 
 const supabaseReady = SUPABASE_URL !== 'TU_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'TU_SUPABASE_ANON_KEY';
 const sb = supabaseReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
