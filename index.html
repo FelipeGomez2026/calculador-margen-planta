@@ -227,6 +227,67 @@ transition:background .15s;
 .tornado-bar.pos-bar{ background:var(--green); opacity:0.55; }
 .tornado-mid{ position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text-dim); left:50%; }
 .tornado-row .impact{ font-family:var(--mono); font-size:11px; text-align:right; color:var(--text-dim); }
+
+
+/* ---------- PUNTO DE EQUILIBRIO ---------- */
+.be-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:20px; max-width:1200px; margin:0 auto; padding:28px 6vw 0; }
+@media (max-width:980px){ .be-grid{ grid-template-columns:1fr; } }
+.be-row{ display:grid; grid-template-columns:1.5fr 1fr .55fr; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--line); }
+.be-row:last-child{ border-bottom:none; }
+.be-row .name{ font-size:13px; }
+.be-row .name small{ display:block; color:var(--text-dim); font-size:10.5px; margin-top:2px; }
+.be-kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:14px; }
+.be-kpi{ background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:14px; }
+.be-kpi .l{ font-size:11.5px; color:var(--text-dim); }
+.be-kpi .v{ font-family:var(--mono); font-size:19px; font-weight:600; margin-top:6px; }
+.be-kpi.main{ grid-column:1/-1; border-top:4px solid var(--copper); }
+.be-kpi.main .v{ font-family:var(--display); font-size:28px; }
+.be-table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:12px; }
+.be-table th,.be-table td{ padding:9px 8px; border-bottom:1px solid var(--line); text-align:right; }
+.be-table th:first-child,.be-table td:first-child{ text-align:left; }
+.be-table th{ font-family:var(--mono); color:var(--text-dim); font-size:10px; text-transform:uppercase; letter-spacing:.05em; }
+.be-chart{ position:relative; height:220px; margin-top:16px; border-left:1px solid var(--line); border-bottom:1px solid var(--line); background:linear-gradient(to top, rgba(210,227,224,.35) 1px, transparent 1px); background-size:100% 25%; }
+.be-line{ position:absolute; left:0; bottom:0; height:3px; transform-origin:left bottom; border-radius:4px; }
+.be-line.revenue{ background:var(--green); }
+.be-line.cost{ background:var(--red); }
+.be-point{ position:absolute; width:12px; height:12px; border-radius:50%; background:var(--amber); border:2px solid white; box-shadow:0 0 0 1px var(--amber); transform:translate(-50%,50%); }
+.be-axis-label{ position:absolute; font-family:var(--mono); font-size:10px; color:var(--text-dim); }
+.be-legend{ display:flex; gap:18px; margin-top:10px; font-size:11.5px; color:var(--text-dim); }
+.be-legend span::before{ content:''; display:inline-block; width:16px; height:3px; margin-right:6px; vertical-align:middle; background:var(--acc); }
+
+
+/* ---------- PUNTO DE EQUILIBRIO INTEGRAL ---------- */
+.be-full{max-width:1200px;margin:0 auto;padding:28px 6vw 0;display:grid;gap:20px}
+.be-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:980px){.be-cols{grid-template-columns:1fr}}
+.be-process{display:grid;grid-template-columns:1.25fr .85fr .65fr .75fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.be-process:last-child{border-bottom:none}
+.be-mat{border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:14px;margin-top:12px}
+.be-mat h3{font-family:var(--display);font-size:14px;margin:0 0 4px;color:var(--copper)}
+.be-mat .hint{font-size:10.5px;color:var(--text-dim);margin-bottom:10px}
+.be-input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:760px){.be-input-grid{grid-template-columns:1fr 1fr}}
+.be-field label{display:block;font-size:10.5px;color:var(--text-dim);margin-bottom:4px}
+.be-field input,.be-field select{width:100%;background:#fff;border:1px solid var(--line);color:var(--text);font-family:var(--mono);font-size:12px;padding:7px;border-radius:7px}
+.be-field input:focus,.be-field select:focus{outline:none;border-color:var(--copper)}
+.be-check{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-dim);white-space:nowrap}
+.be-var-table{width:100%;border-collapse:collapse;font-size:12px}
+.be-var-table th{text-align:left;color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;padding:7px;border-bottom:1px solid var(--line)}
+.be-var-table td{padding:7px;border-bottom:1px solid var(--line)}
+.be-var-table input[type=number]{width:95px}
+.be-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.be-summary{grid-template-columns:1fr 1fr}}
+.be-summary .box{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:13px}
+.be-summary .l{font-size:11px;color:var(--text-dim)}
+.be-summary .v{font-family:var(--mono);font-weight:600;font-size:16px;margin-top:5px}
+.be-solver{display:grid;grid-template-columns:1.4fr .8fr .8fr auto;gap:10px;align-items:end}
+@media(max-width:760px){.be-solver{grid-template-columns:1fr}}
+.be-solver label{display:block;font-size:11px;color:var(--text-dim);margin-bottom:5px}
+.be-solver select,.be-solver input{width:100%;background:var(--panel-2);border:1px solid var(--line);padding:8px;border-radius:7px;font-family:var(--mono)}
+.be-action{font-family:var(--display);font-weight:600;color:#fff;background:var(--copper);border:none;border-radius:8px;padding:9px 16px;cursor:pointer}
+.be-action:hover{background:var(--copper-dim)}
+.be-note{font-size:11px;color:var(--text-dim);line-height:1.5;margin-top:9px}
+
 </style>
 </head>
 <body>
@@ -437,6 +498,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 <div class="tabs">
 <button class="tab-btn active" id="tabBtnCalc" onclick="showTab('calc')">Calculador</button>
 <button class="tab-btn" id="tabBtnSens" onclick="showTab('sens')">Sensibilización</button>
+<button class="tab-btn" id="tabBtnBE" onclick="showTab('be')">Punto de Equilibrio</button>
 <button class="tab-btn" id="tabBtnLog" onclick="showTab('log')" style="display:none;">Registro de Accesos</button>
 </div>
 
@@ -645,6 +707,124 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 <div id="tornadoList"></div>
 </section>
 </div>
+</div>
+</div>
+
+
+
+
+<div id="panel-be" class="panel">
+<div class="be-full">
+<section class="card">
+<h2><span class="idx">PE</span> Punto de Equilibrio Integral de Planta</h2>
+<p class="desc">Modelo independiente que calcula costos por proceso, ingresos por cargos de tratamiento y margen metalúrgico desde tonelajes, leyes, recuperaciones y leyes de concentrado. Luego busca el valor de una variable que hace que el resultado total sea igual a cero.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="reset-btn" onclick="beLoadFromMain()">Copiar valores del Calculador</button>
+<button class="reset-btn" onclick="beResetScenario()">Restablecer variaciones</button>
+</div>
+</section>
+
+<div class="be-cols">
+<section class="card">
+<h2><span class="idx">1</span> Costos por proceso</h2>
+<p class="desc">El costo base se divide entre componente fijo y variable. La parte variable escala según el tonelaje real respecto del tonelaje base.</p>
+<div class="be-process"><div class="colhead">Proceso</div><div class="colhead">Costo base US$</div><div class="colhead">% fijo</div><div class="colhead">Ton. base</div></div>
+<div class="be-process"><div class="name">Compra / Recepción</div><input type="number" id="be_c_recepcion" value="334796.1"><input type="number" id="be_pf_recepcion" value="40"><input type="number" id="be_tb_recepcion" value="67112.315"></div>
+<div class="be-process"><div class="name">Chancado</div><input type="number" id="be_c_chancado" value="381728.74"><input type="number" id="be_pf_chancado" value="40"><input type="number" id="be_tb_chancado" value="75016.478"></div>
+<div class="be-process"><div class="name">Flotación</div><input type="number" id="be_c_flotacion" value="925878.11"><input type="number" id="be_pf_flotacion" value="40"><input type="number" id="be_tb_flotacion" value="59600"></div>
+<div class="be-process"><div class="name">Gastos administrativos</div><input type="number" id="be_admin" value="85395"><input type="number" value="100" disabled><div class="unit">fijo</div></div>
+</section>
+
+<section class="card">
+<h2><span class="idx">2</span> Parámetros comerciales</h2>
+<p class="desc">Precios y cargos comunes utilizados para valorizar los finos recuperados.</p>
+<div class="be-input-grid">
+<div class="be-field"><label>Precio Cu cUS$/lb</label><input type="number" id="be_precio_cu" value="612.673"></div>
+<div class="be-field"><label>Precio Au US$/oz</label><input type="number" id="be_precio_au" value="4585.287"></div>
+<div class="be-field"><label>Precio Ag US$/oz</label><input type="number" id="be_precio_ag" value="77.83395"></div>
+<div class="be-field"><label>Fusión conc. Cu US$/TMS</label><input type="number" id="be_cf_cu" value="43"></div>
+<div class="be-field"><label>Fusión conc. Au US$/TMS</label><input type="number" id="be_cf_au" value="43"></div>
+<div class="be-field"><label>Refinación Cu cUS$/lb</label><input type="number" id="be_cr_cu" value="4.3"></div>
+<div class="be-field"><label>Desc. Cu %</label><input type="number" id="be_dm_cu" value="3.8"></div>
+<div class="be-field"><label>Refinación Ag US$/oz</label><input type="number" id="be_cr_ag" value="0.365"></div>
+<div class="be-field"><label>Desc. Ag %</label><input type="number" id="be_dm_ag" value="4"></div>
+<div class="be-field"><label>Refinación Au US$/oz</label><input type="number" id="be_cr_au" value="6"></div>
+<div class="be-field"><label>Desc. Au %</label><input type="number" id="be_dm_au" value="4"></div>
+<div class="be-field"><label>Capacidad flotación TMS</label><input type="number" id="be_capacidad" value="60000"></div>
+</div>
+</section>
+</div>
+
+<section class="card">
+<h2><span class="idx">3</span> Tonelajes e ingresos por cargos de tratamiento</h2>
+<p class="desc">Cada etapa puede tener un tonelaje distinto. El ingreso se calcula como tonelaje × tarifa.</p>
+<div class="be-process"><div class="colhead">Etapa / línea</div><div class="colhead">Tonelaje TMS</div><div class="colhead">Tarifa US$/TMS</div><div class="colhead">Ingreso</div></div>
+<div class="be-process"><div class="name">Recepción</div><input type="number" id="be_ton_recepcion" value="67112.315"><input type="number" id="be_tar_recepcion" value="7.17"><div class="subtotal" id="be_ing_recepcion">US$ 0</div></div>
+<div class="be-process"><div class="name">Chancado</div><input type="number" id="be_ton_chancado" value="75016.478"><input type="number" id="be_tar_chancado" value="6.75"><div class="subtotal" id="be_ing_chancado">US$ 0</div></div>
+<div class="be-process"><div class="name">Flotación Cu Tarifa</div><input type="number" id="be_ton_t" value="23478.871"><input type="number" id="be_tar_t" value="27.5"><div class="subtotal" id="be_ing_t">US$ 0</div></div>
+<div class="be-process"><div class="name">Flotación Cu Mina</div><input type="number" id="be_ton_m" value="32074.389"><input type="number" id="be_tar_m" value="27.5"><div class="subtotal" id="be_ing_m">US$ 0</div></div>
+<div class="be-process"><div class="name">Flotación Oro</div><input type="number" id="be_ton_o" value="4034.17"><input type="number" id="be_tar_o" value="27.78"><div class="subtotal" id="be_ing_o">US$ 0</div></div>
+</section>
+
+<section class="card">
+<h2><span class="idx">4</span> Alimentación y margen metalúrgico</h2>
+<p class="desc">El margen metalúrgico compara el valor neto realmente obtenido con el valor contractual. Barridos se valoriza como venta directa.</p>
+<div class="be-cols">
+<div class="be-mat"><h3>Cobre Tarifa</h3><div class="hint">Producto principal: cobre. Oro y plata se valorizan como subproductos.</div><div class="be-input-grid">
+<div class="be-field"><label>Ley Cu cabeza %</label><input id="be_leyCu_t" type="number" value="1.76749129"></div><div class="be-field"><label>Ley Ag g/t</label><input id="be_leyAg_t" type="number" value="3.764959567"></div><div class="be-field"><label>Ley Au g/t</label><input id="be_leyAu_t" type="number" value="0.474554334"></div><div class="be-field"><label>Ley conc. real Cu %</label><input id="be_leyConcR_t" type="number" value="18.54592823"></div>
+<div class="be-field"><label>Rec. real Cu %</label><input id="be_recCu_t" type="number" value="74.67074872"></div><div class="be-field"><label>Rec. real Ag %</label><input id="be_recAg_t" type="number" value="80.65"></div><div class="be-field"><label>Rec. real Au %</label><input id="be_recAu_t" type="number" value="39.74"></div><div class="be-field"><label>Ley conc. contrato Cu %</label><input id="be_leyConcC_t" type="number" value="26.21"></div>
+<div class="be-field"><label>Rec. contrato Cu %</label><input id="be_recCuC_t" type="number" value="90.98"></div><div class="be-field"><label>Rec. contrato Ag %</label><input id="be_recAgC_t" type="number" value="60"></div><div class="be-field"><label>Rec. contrato Au %</label><input id="be_recAuC_t" type="number" value="60"></div><div class="be-field"><label>Margen calculado</label><div class="subtotal" id="be_margen_t">US$ 0</div></div>
+</div></div>
+<div class="be-mat"><h3>Cobre Mina</h3><div class="hint">Producto principal: cobre. Permite incluir oro y plata como subproductos.</div><div class="be-input-grid">
+<div class="be-field"><label>Ley Cu cabeza %</label><input id="be_leyCu_m" type="number" value="0.739022651"></div><div class="be-field"><label>Ley Ag g/t</label><input id="be_leyAg_m" type="number" value="0"></div><div class="be-field"><label>Ley Au g/t</label><input id="be_leyAu_m" type="number" value="0"></div><div class="be-field"><label>Ley conc. real Cu %</label><input id="be_leyConcR_m" type="number" value="18.55"></div>
+<div class="be-field"><label>Rec. real Cu %</label><input id="be_recCu_m" type="number" value="52.24"></div><div class="be-field"><label>Rec. real Ag %</label><input id="be_recAg_m" type="number" value="0"></div><div class="be-field"><label>Rec. real Au %</label><input id="be_recAu_m" type="number" value="0"></div><div class="be-field"><label>Ley conc. contrato Cu %</label><input id="be_leyConcC_m" type="number" value="26.21"></div>
+<div class="be-field"><label>Rec. contrato Cu %</label><input id="be_recCuC_m" type="number" value="88"></div><div class="be-field"><label>Rec. contrato Ag %</label><input id="be_recAgC_m" type="number" value="60"></div><div class="be-field"><label>Rec. contrato Au %</label><input id="be_recAuC_m" type="number" value="60"></div><div class="be-field"><label>Margen calculado</label><div class="subtotal" id="be_margen_m">US$ 0</div></div>
+</div></div>
+</div>
+<div class="be-mat"><h3>Barridos — venta directa</h3><div class="be-input-grid">
+<div class="be-field"><label>Tonelaje TMS</label><input id="be_ton_b" type="number" value="495.39"></div><div class="be-field"><label>Ley Cu %</label><input id="be_leyCu_b" type="number" value="1.66"></div><div class="be-field"><label>Recuperación Cu %</label><input id="be_recCu_b" type="number" value="51"></div><div class="be-field"><label>Ley concentrado Cu %</label><input id="be_leyConc_b" type="number" value="18.55"></div>
+<div class="be-field"><label>Ley Ag g/t</label><input id="be_leyAg_b" type="number" value="0"></div><div class="be-field"><label>Recuperación Ag %</label><input id="be_recAg_b" type="number" value="0"></div><div class="be-field"><label>Ley Au g/t</label><input id="be_leyAu_b" type="number" value="0"></div><div class="be-field"><label>Recuperación Au %</label><input id="be_recAu_b" type="number" value="0"></div>
+</div></div>
+</section>
+
+<section class="card">
+<h2><span class="idx">5</span> Variables de escenario</h2>
+<p class="desc">Marca las variables que pueden cambiar manualmente y asigna una variación porcentual. Las no marcadas permanecen fijas. La variable objetivo seleccionada abajo se resuelve automáticamente para llevar el resultado a cero.</p>
+<table class="be-var-table"><thead><tr><th>Variable</th><th>Permitir variar</th><th>Variación %</th><th>Valor escenario</th></tr></thead><tbody id="be_var_rows"></tbody></table>
+</section>
+
+<section class="card">
+<h2><span class="idx">6</span> Resolver punto de equilibrio</h2>
+<div class="be-solver">
+<div><label>Variable objetivo</label><select id="be_target"></select></div>
+<div><label>Mínimo de búsqueda</label><input type="number" id="be_target_min" value="0"></div>
+<div><label>Máximo de búsqueda</label><input type="number" id="be_target_max" value="120000"></div>
+<button class="be-action" onclick="beSolve()">Calcular equilibrio</button>
+</div>
+<div class="be-note">El sistema mantiene fijas las demás variables después de aplicar sus variaciones manuales. Busca una única variable objetivo mediante bisección. Si no existe un cruce dentro del rango indicado, lo informa.</div>
+<div class="miniresult" style="margin-top:12px"><span class="l">Valor de equilibrio de la variable objetivo</span><span class="v" id="be_target_result">—</span></div>
+<div class="miniresult"><span class="l">Diagnóstico</span><span class="v" id="be_solve_status">Selecciona una variable y calcula</span></div>
+</section>
+
+<section class="card">
+<h2><span class="idx">R</span> Resultado económico del escenario</h2>
+<div class="be-summary">
+<div class="box"><div class="l">Ingreso por tratamiento</div><div class="v" id="be_r_ingreso">US$ 0</div></div>
+<div class="box"><div class="l">Costo total planta</div><div class="v" id="be_r_costo">US$ 0</div></div>
+<div class="box"><div class="l">Margen metalúrgico total</div><div class="v" id="be_r_metal">US$ 0</div></div>
+<div class="box"><div class="l">Resultado planta</div><div class="v" id="be_r_resultado">US$ 0</div></div>
+<div class="box"><div class="l">Costo fijo total</div><div class="v" id="be_r_fijo">US$ 0</div></div>
+<div class="box"><div class="l">Costo variable total</div><div class="v" id="be_r_variable">US$ 0</div></div>
+<div class="box"><div class="l">Tonelaje flotación</div><div class="v" id="be_r_ton">0 TMS</div></div>
+<div class="box"><div class="l">Utilización capacidad</div><div class="v" id="be_r_util">0%</div></div>
+</div>
+<div class="scenario-box" style="margin-top:14px">
+<div class="row2"><span class="l">Costo Recepción</span><span class="v" id="be_r_c_rec">US$ 0</span></div>
+<div class="row2"><span class="l">Costo Chancado</span><span class="v" id="be_r_c_cha">US$ 0</span></div>
+<div class="row2"><span class="l">Costo Flotación</span><span class="v" id="be_r_c_flo">US$ 0</span></div>
+<div class="row2 total"><span class="l">Resultado final</span><span class="v" id="be_r_final">US$ 0</span></div>
+</div>
+</section>
 </div>
 </div>
 
@@ -939,13 +1119,56 @@ tornadoContainer.appendChild(row);
 });
 }
 
+
+
+// ================= PUNTO DE EQUILIBRIO INTEGRAL =================
+const BE_SCENARIO_VARS = [
+['ton_recepcion','Tonelaje recepción','TMS'],['ton_chancado','Tonelaje chancado','TMS'],['ton_t','Tonelaje Cu tarifa','TMS'],['ton_m','Tonelaje Cu mina','TMS'],['ton_o','Tonelaje oro','TMS'],['ton_b','Tonelaje barridos','TMS'],
+['tar_recepcion','Tarifa recepción','US$/TMS'],['tar_chancado','Tarifa chancado','US$/TMS'],['tar_t','Tarifa Cu tarifa','US$/TMS'],['tar_m','Tarifa Cu mina','US$/TMS'],['tar_o','Tarifa oro','US$/TMS'],
+['leyCu_t','Ley Cu tarifa','%'],['recCu_t','Recuperación Cu tarifa','%'],['leyConcR_t','Ley concentrado Cu tarifa','%'],['leyCu_m','Ley Cu mina','%'],['recCu_m','Recuperación Cu mina','%'],['leyConcR_m','Ley concentrado Cu mina','%'],
+['precio_cu','Precio cobre','cUS$/lb'],['precio_au','Precio oro','US$/oz'],['precio_ag','Precio plata','US$/oz'],
+['c_recepcion','Costo base recepción','US$'],['c_chancado','Costo base chancado','US$'],['c_flotacion','Costo base flotación','US$'],['pf_recepcion','Proporción fija recepción','%'],['pf_chancado','Proporción fija chancado','%'],['pf_flotacion','Proporción fija flotación','%']
+];
+const beVarState={};
+function beN(id){const e=document.getElementById('be_'+id); if(!e)return 0; const v=parseFloat(e.value);return Number.isFinite(v)?v:0}
+function beReadBase(){return {
+c_recepcion:beN('c_recepcion'),pf_recepcion:beN('pf_recepcion'),tb_recepcion:beN('tb_recepcion'),c_chancado:beN('c_chancado'),pf_chancado:beN('pf_chancado'),tb_chancado:beN('tb_chancado'),c_flotacion:beN('c_flotacion'),pf_flotacion:beN('pf_flotacion'),tb_flotacion:beN('tb_flotacion'),admin:beN('admin'),
+precio_cu:beN('precio_cu'),precio_au:beN('precio_au'),precio_ag:beN('precio_ag'),cf_cu:beN('cf_cu'),cf_au:beN('cf_au'),cr_cu:beN('cr_cu'),dm_cu:beN('dm_cu'),cr_ag:beN('cr_ag'),dm_ag:beN('dm_ag'),cr_au:beN('cr_au'),dm_au:beN('dm_au'),capacidad:beN('capacidad'),Ka:22.046223,Kb:31.10348,
+ton_recepcion:beN('ton_recepcion'),tar_recepcion:beN('tar_recepcion'),ton_chancado:beN('ton_chancado'),tar_chancado:beN('tar_chancado'),ton_t:beN('ton_t'),tar_t:beN('tar_t'),ton_m:beN('ton_m'),tar_m:beN('tar_m'),ton_o:beN('ton_o'),tar_o:beN('tar_o'),
+leyCu_t:beN('leyCu_t'),leyAg_t:beN('leyAg_t'),leyAu_t:beN('leyAu_t'),leyConcR_t:beN('leyConcR_t'),recCu_t:beN('recCu_t'),recAg_t:beN('recAg_t'),recAu_t:beN('recAu_t'),leyConcC_t:beN('leyConcC_t'),recCuC_t:beN('recCuC_t'),recAgC_t:beN('recAgC_t'),recAuC_t:beN('recAuC_t'),
+leyCu_m:beN('leyCu_m'),leyAg_m:beN('leyAg_m'),leyAu_m:beN('leyAu_m'),leyConcR_m:beN('leyConcR_m'),recCu_m:beN('recCu_m'),recAg_m:beN('recAg_m'),recAu_m:beN('recAu_m'),leyConcC_m:beN('leyConcC_m'),recCuC_m:beN('recCuC_m'),recAgC_m:beN('recAgC_m'),recAuC_m:beN('recAuC_m'),
+ton_b:beN('ton_b'),leyCu_b:beN('leyCu_b'),recCu_b:beN('recCu_b'),leyConc_b:beN('leyConc_b'),leyAg_b:beN('leyAg_b'),recAg_b:beN('recAg_b'),leyAu_b:beN('leyAu_b'),recAu_b:beN('recAu_b')
+}}
+function beScenario(P){const X={...P};BE_SCENARIO_VARS.forEach(([k])=>{const st=beVarState[k];if(st&&st.enabled)X[k]=P[k]*(1+st.pct/100)});return X}
+function beCost(base,pfixed,baseTon,actualTon){const pf=Math.max(0,Math.min(100,pfixed))/100;const fixed=base*pf;const variableBase=base*(1-pf);const variable=baseTon>0?variableBase*(actualTon/baseTon):0;return {fixed,variable,total:fixed+variable}}
+function beValueFines(P,ton,leyCu,leyAg,leyAu,recCu,recAg,recAu,leyConc,tipo){
+const Fcum=ton*leyCu/100,Fagm=ton*leyAg/1000,Faum=ton*leyAu/1000;const Fcuc=Fcum*recCu/100,Fagc=Fagm*recAg/100,Fauc=Faum*recAu/100;let psc=0;if(tipo==='Cu')psc=leyConc>0?Fcuc/(leyConc/100):0;else psc=leyConc>0?(Fauc*1000)/leyConc:0;
+const vCu=Fcuc*(1-P.dm_cu/100)*P.Ka*(P.precio_cu-P.cr_cu)-(tipo==='Cu'?P.cf_cu*psc:0);const vAg=Fagc*(1-P.dm_ag/100)*(1000/P.Kb)*(P.precio_ag-P.cr_ag);const vAu=Fauc*(1-P.dm_au/100)*(1000/P.Kb)*(P.precio_au-P.cr_au)-(tipo==='Au'?P.cf_au*psc:0);return vCu+vAg+vAu}
+function beMetalLine(P,prefix,ton){const real=beValueFines(P,ton,P['leyCu_'+prefix],P['leyAg_'+prefix],P['leyAu_'+prefix],P['recCu_'+prefix],P['recAg_'+prefix],P['recAu_'+prefix],P['leyConcR_'+prefix],'Cu');const contract=beValueFines(P,ton,P['leyCu_'+prefix],P['leyAg_'+prefix],P['leyAu_'+prefix],P['recCuC_'+prefix],P['recAgC_'+prefix],P['recAuC_'+prefix],P['leyConcC_'+prefix],'Cu');return real-contract}
+function beCompute(P){
+const ingRec=P.ton_recepcion*P.tar_recepcion,ingCha=P.ton_chancado*P.tar_chancado,ingT=P.ton_t*P.tar_t,ingM=P.ton_m*P.tar_m,ingO=P.ton_o*P.tar_o;const ingreso=ingRec+ingCha+ingT+ingM+ingO;
+const tonFlo=P.ton_t+P.ton_m+P.ton_o;const cRec=beCost(P.c_recepcion,P.pf_recepcion,P.tb_recepcion,P.ton_recepcion),cCha=beCost(P.c_chancado,P.pf_chancado,P.tb_chancado,P.ton_chancado),cFlo=beCost(P.c_flotacion,P.pf_flotacion,P.tb_flotacion,tonFlo);const fijo=cRec.fixed+cCha.fixed+cFlo.fixed+P.admin,variable=cRec.variable+cCha.variable+cFlo.variable,costo=fijo+variable;
+const mt=beMetalLine(P,'t',P.ton_t),mm=beMetalLine(P,'m',P.ton_m),mb=beValueFines(P,P.ton_b,P.leyCu_b,P.leyAg_b,P.leyAu_b,P.recCu_b,P.recAg_b,P.recAu_b,P.leyConc_b,'Cu');const metal=mt+mm+mb;const resultado=ingreso+metal-costo;return {ingRec,ingCha,ingT,ingM,ingO,ingreso,cRec,cCha,cFlo,fijo,variable,costo,mt,mm,mb,metal,tonFlo,resultado}}
+function beBuildVars(){const body=document.getElementById('be_var_rows'),sel=document.getElementById('be_target');if(!body||body.children.length)return;BE_SCENARIO_VARS.forEach(([k,label,unit])=>{beVarState[k]={enabled:false,pct:0};const tr=document.createElement('tr');tr.innerHTML=`<td>${label}</td><td><input type="checkbox" id="be_enable_${k}"></td><td><input type="number" id="be_pct_${k}" value="0" step="1" disabled></td><td id="be_sval_${k}">— ${unit}</td>`;body.appendChild(tr);const op=document.createElement('option');op.value=k;op.textContent=label;sel.appendChild(op);tr.querySelector('#be_enable_'+k).addEventListener('change',e=>{beVarState[k].enabled=e.target.checked;document.getElementById('be_pct_'+k).disabled=!e.target.checked;beCalc()});tr.querySelector('#be_pct_'+k).addEventListener('input',e=>{beVarState[k].pct=parseFloat(e.target.value)||0;beCalc()})});sel.value='ton_t';beSetTargetRange()}
+function beSetTargetRange(){const k=document.getElementById('be_target').value;const P=beScenario(beReadBase());const v=P[k]||0;document.getElementById('be_target_min').value=0;document.getElementById('be_target_max').value=(k.startsWith('ton_')?Math.max(v*3,120000):k.startsWith('rec')||k.startsWith('pf_')?100:Math.max(v*3,1))}
+function beCalc(){beBuildVars();const B=beReadBase(),P=beScenario(B),R=beCompute(P);['recepcion','chancado'].forEach(x=>document.getElementById('be_ing_'+x).textContent=fmt(R[x==='recepcion'?'ingRec':'ingCha']));document.getElementById('be_ing_t').textContent=fmt(R.ingT);document.getElementById('be_ing_m').textContent=fmt(R.ingM);document.getElementById('be_ing_o').textContent=fmt(R.ingO);document.getElementById('be_margen_t').textContent=fmt(R.mt);document.getElementById('be_margen_m').textContent=fmt(R.mm);
+BE_SCENARIO_VARS.forEach(([k,,unit])=>{const e=document.getElementById('be_sval_'+k);if(e)e.textContent=(Number.isFinite(P[k])?P[k].toLocaleString('es-CL',{maximumFractionDigits:4}):'—')+' '+unit});
+const out={be_r_ingreso:R.ingreso,be_r_costo:R.costo,be_r_metal:R.metal,be_r_resultado:R.resultado,be_r_fijo:R.fijo,be_r_variable:R.variable,be_r_c_rec:R.cRec.total,be_r_c_cha:R.cCha.total,be_r_c_flo:R.cFlo.total,be_r_final:R.resultado};Object.entries(out).forEach(([id,v])=>{const e=document.getElementById(id);e.textContent=fmt(v);if(id.includes('resultado')||id.includes('final'))e.style.color=v>=0?'var(--green)':'var(--red)'});document.getElementById('be_r_ton').textContent=Math.round(R.tonFlo).toLocaleString('es-CL')+' TMS';document.getElementById('be_r_util').textContent=(P.capacidad>0?R.tonFlo/P.capacidad*100:0).toFixed(1)+'%';return {B,P,R}}
+function beSolve(){const {P}=beCalc();const k=document.getElementById('be_target').value;let lo=parseFloat(document.getElementById('be_target_min').value),hi=parseFloat(document.getElementById('be_target_max').value);const result=document.getElementById('be_target_result'),status=document.getElementById('be_solve_status');if(!Number.isFinite(lo)||!Number.isFinite(hi)||hi<=lo){status.textContent='Rango de búsqueda inválido';status.className='v neg';return}const f=x=>{const Z={...P,[k]:x};return beCompute(Z).resultado};let flo=f(lo),fhi=f(hi);if(Math.abs(flo)<0.01){hi=lo;fhi=flo}else if(Math.abs(fhi)>=0.01&&flo*fhi>0){result.textContent='—';status.textContent='No existe cruce de equilibrio dentro del rango indicado';status.className='v neg';return}for(let i=0;i<100;i++){const mid=(lo+hi)/2,fm=f(mid);if(Math.abs(fm)<0.01){lo=hi=mid;break}if(flo*fm<=0){hi=mid;fhi=fm}else{lo=mid;flo=fm}}const x=(lo+hi)/2;result.textContent=x.toLocaleString('es-CL',{maximumFractionDigits:4});status.textContent='Equilibrio encontrado: resultado ≈ US$ 0';status.className='v pos'}
+function beResetScenario(){BE_SCENARIO_VARS.forEach(([k])=>{beVarState[k]={enabled:false,pct:0};const c=document.getElementById('be_enable_'+k),n=document.getElementById('be_pct_'+k);if(c)c.checked=false;if(n){n.value=0;n.disabled=true}});beCalc()}
+function beLoadFromMain(){const M={c_recepcion:'costo_recepcion',c_chancado:'costo_chancado',c_flotacion:'costo_flotacion',admin:'gastos_admin',precio_cu:'precio_cu',precio_au:'precio_au',precio_ag:'precio_ag',cf_cu:'cf_cu',cf_au:'cf_au',cr_cu:'cr_cu',dm_cu:'dm_cu',cr_ag:'cr_ag',dm_ag:'dm_ag',cr_au:'cr_au',dm_au:'dm_au',ton_recepcion:'ton_recepcion',tar_recepcion:'tarifa_recepcion',ton_chancado:'ton_chancado',tar_chancado:'tarifa_chancado',ton_t:'ton_cutarifa',tar_t:'tarifa_cutarifa',ton_m:'ton_cumina',tar_m:'tarifa_cumina',ton_o:'ton_au',tar_o:'tarifa_au',leyCu_t:'leyCu_t',leyAg_t:'leyAg_t',leyAu_t:'leyAu_t',recCu_t:'recCu_t',recAg_t:'recAg_t',recAu_t:'recAu_t',leyConcR_t:'leyConcR_t',recCuC_t:'recCuC_t',recAgC_t:'recAgC_t',recAuC_t:'recAuC_t',leyConcC_t:'leyConcC_t',leyCu_m:'leyCu_m',leyAg_m:'leyAg_m',leyAu_m:'leyAu_m',recCu_m:'recCu_m',recAg_m:'recAg_m',recAu_m:'recAu_m',leyConcR_m:'leyConcR_m',recCuC_m:'recCuC_m',recAgC_m:'recAgC_m',recAuC_m:'recAuC_m',leyConcC_m:'leyConcC_m',ton_b:'ton_b',leyCu_b:'leyCu_b',recCu_b:'recCu_b',leyConc_b:'leyConc_b'};Object.entries(M).forEach(([b,m])=>{const dst=document.getElementById('be_'+b),src=document.getElementById(m);if(dst&&src)dst.value=src.value});document.getElementById('be_tb_recepcion').value=document.getElementById('be_ton_recepcion').value;document.getElementById('be_tb_chancado').value=document.getElementById('be_ton_chancado').value;document.getElementById('be_tb_flotacion').value=beN('ton_t')+beN('ton_m')+beN('ton_o');beCalc()}
+
 function showTab(name){
 document.getElementById('panel-calc').classList.toggle('active', name==='calc');
 document.getElementById('panel-sens').classList.toggle('active', name==='sens');
+document.getElementById('panel-be').classList.toggle('active', name==='be');
 document.getElementById('panel-log').classList.toggle('active', name==='log');
 document.getElementById('tabBtnCalc').classList.toggle('active', name==='calc');
 document.getElementById('tabBtnSens').classList.toggle('active', name==='sens');
+document.getElementById('tabBtnBE').classList.toggle('active', name==='be');
 document.getElementById('tabBtnLog').classList.toggle('active', name==='log');
+document.querySelector('.sticky').style.display = name==='be' ? 'none' : '';
+if(name==='be') beCalc();
 if(name==='log') loadLoginLog();
 }
 
@@ -1119,6 +1342,7 @@ document.getElementById('tabBtnLog').style.display = isAdmin ? '' : 'none';
 renderScenarioList();
 });
 calc();
+beCalc();
 renderScenarioList();
 refreshScenarios();
 }
@@ -1142,6 +1366,8 @@ container.appendChild(div);
 }
 
 document.querySelectorAll('#panel-calc input').forEach(el=>el.addEventListener('input', calc));
+document.querySelectorAll('#panel-be input[type=number]').forEach(el=>el.addEventListener('input', beCalc));
+document.getElementById('be_target')?.addEventListener('change', beSetTargetRange);
 document.getElementById('loginPassword')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doLogin(); });
 
 (async function initAuth(){
@@ -1149,7 +1375,7 @@ if(!supabaseReady){
 // Sin Supabase configurado: no exigimos login, se muestra la app directo (modo demo/local)
 document.getElementById('loginScreen').style.display = 'none';
 document.getElementById('appRoot').style.display = 'block';
-calc(); renderScenarioList();
+calc(); beCalc(); renderScenarioList();
 return;
 }
 const { data } = await sb.auth.getSession();
