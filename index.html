@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculador de Margen de Planta Delta - Método Maquila</title>
+<title>Calculador de Margen de Planta — Maquila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -54,6 +54,8 @@
 
   main{ padding:32px 6vw 0; display:grid; gap:20px; max-width:1200px; margin:0 auto; }
   .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+  .grid3{ display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
+  @media (max-width:900px){ .grid3{ grid-template-columns:1fr; } }
   .grid4{ display:grid; grid-template-columns: repeat(4,1fr); gap:16px; }
   @media (max-width:980px){ .grid2, .grid4{ grid-template-columns:1fr; } }
 
@@ -171,6 +173,19 @@
   .log-row:last-child{ border-bottom:none; }
   .log-row .email{ font-weight:500; }
   .log-row .time{ font-family:var(--mono); font-size:11.5px; color:var(--text-dim); }
+
+  /* ---------- PUNTO DE EQUILIBRIO ---------- */
+  .be-table{ border:1px solid var(--line); border-radius:9px; overflow:hidden; }
+  .be-row{ display:grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+  .be-row > div{ padding:10px 14px; border-bottom:1px solid var(--line); border-right:1px solid var(--line); font-family:var(--mono); font-size:13px; }
+  .be-row > div:last-child{ border-right:none; }
+  .be-row:last-child > div{ border-bottom:none; }
+  .be-head > div{ font-family:var(--display); font-weight:600; font-size:12.5px; background:var(--panel-2); }
+  .be-lbl{ font-family:var(--sans) !important; font-size:13px !important; }
+  .be-lbl small{ display:block; color:var(--text-dim); font-size:10.5px; margin-top:2px; }
+  .be-badge{ display:inline-block; font-family:var(--mono); font-size:10px; padding:1px 7px; border-radius:20px; margin-left:6px; }
+  .be-ok{ background:color-mix(in srgb, var(--green) 16%, white); color:var(--green); }
+  .be-bad{ background:color-mix(in srgb, var(--red) 14%, white); color:var(--red); }
 
   /* ---------- TABS ---------- */
   .tabs{ display:flex; gap:6px; margin:26px 6vw 0; border-bottom:1px solid var(--line); max-width:1200px; }
@@ -305,7 +320,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 10 -10 10 -16z"/>
 </g>
 </svg>
-    <h1>Calculador de Margen de Planta Delta</h1>
+    <h1>Calculador de Margen de Planta</h1>
     <p>Ingresa con tu cuenta para continuar.</p>
     <div class="login-field">
       <label for="loginEmail">Correo</label>
@@ -399,45 +414,48 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 10 -10 10 -16z"/>
 </g>
 </svg>
-  <p class="eyebrow">Planta Delta - Método Maquila</p>
-  <h1>Calculador de Margen de Planta Delta</h1>
+  <p class="eyebrow">Planta de Beneficio · Maquila</p>
+  <h1>Calculador de Margen de Planta</h1>
   <p class="sub">Ingresa tonelajes y leyes de alimentación por etapa, recuperaciones metalúrgicas, un costo de planta estimado y los precios de metales. El margen se recalcula al instante.</p>
   <div class="ben-cards" id="benCards">
     <div class="ben-card general">
-      <div class="lbl">Mezcla Global - Cobre</div>
+      <div class="lbl">Mezcla Global — Cobre</div>
       <div class="gen-block">
-        <div class="gen-row"><span class="k">Ley Cabeza</span><span class="v" id="genLeyCabeza">-</span></div>
-        <div class="gen-row"><span class="k">Recuperación</span><span class="v" id="genRecuperacion">-</span></div>
-        <div class="gen-row"><span class="k">Ley Concentrado</span><span class="v" id="genLeyConc">-</span></div>
+        <div class="gen-row"><span class="k">Ley Cabeza</span><span class="v" id="genLeyCabeza">—</span></div>
+        <div class="gen-row"><span class="k">Recuperación</span><span class="v" id="genRecuperacion">—</span></div>
+        <div class="gen-row"><span class="k">Ley Concentrado</span><span class="v" id="genLeyConc">—</span></div>
       </div>
     </div>
     <div class="ben-card tarifa">
       <div class="lbl">Tonelaje Cobre Tarifa</div>
-      <div class="val" id="benTarifaTon">-<span class="unit">tms</span></div>
-      <div class="pct" id="benTarifaPct">-</div>
+      <div class="val" id="benTarifaTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benTarifaPct">—</div>
     </div>
     <div class="ben-card mina">
       <div class="lbl">Tonelaje Cobre Mina</div>
-      <div class="val" id="benMinaTon">-<span class="unit">tms</span></div>
-      <div class="pct" id="benMinaPct">-</div>
+      <div class="val" id="benMinaTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benMinaPct">—</div>
     </div>
     <div class="ben-card barridos">
       <div class="lbl">Tonelaje Barridos</div>
-      <div class="val" id="benBarridosTon">-<span class="unit">tms</span></div>
-      <div class="pct" id="benBarridosPct">-</div>
+      <div class="val" id="benBarridosTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benBarridosPct">—</div>
     </div>
     <div class="ben-card oro">
       <div class="lbl">Tonelaje Oro</div>
-      <div class="val" id="benOroTon">-<span class="unit">tms</span></div>
-      <div class="pct" id="benOroPct">-</div>
+      <div class="val" id="benOroTon">—<span class="unit">tms</span></div>
+      <div class="pct" id="benOroPct">—</div>
     </div>
   </div>
 </header>
 
 <div class="tabs">
   <button class="tab-btn active" id="tabBtnCalc" onclick="showTab('calc')">Calculador</button>
+  <button class="tab-btn" id="tabBtnNegocio" onclick="showTab('negocio')">Negocio</button>
   <button class="tab-btn" id="tabBtnSens" onclick="showTab('sens')">Sensibilización</button>
+  <button class="tab-btn" id="tabBtnSensNeg" onclick="showTab('sensneg')">Sensibilidad Negocio</button>
   <button class="tab-btn" id="tabBtnLog" onclick="showTab('log')" style="display:none;">Registro de Accesos</button>
+  <button class="tab-btn" id="tabBtnBreakeven" onclick="showTab('breakeven')" style="display:none;">Punto de Equilibrio</button>
 </div>
 
 <div id="panel-calc" class="panel active">
@@ -450,15 +468,15 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <button class="scen-save-btn" onclick="saveScenario()">Guardar escenario actual</button>
     </div>
     <div id="scenWarning" class="scen-empty" style="display:none; color:var(--red);">
-      ⚠ Falta configurar la conexión a Supabase - edita SUPABASE_URL y SUPABASE_ANON_KEY al inicio del &lt;script&gt; en este archivo.
+      ⚠ Falta configurar la conexión a Supabase — edita SUPABASE_URL y SUPABASE_ANON_KEY al inicio del &lt;script&gt; en este archivo.
     </div>
     <div id="scenList"><div class="scen-empty">Aún no hay escenarios guardados.</div></div>
   </section>
 
   <!-- ===================== INGRESO ===================== -->
   <section class="card">
-    <h2><span class="idx">A</span> Ingreso por Cargo de Tratamiento</h2>
-    <p class="desc">Tonelaje que pasa por cada etapa, valorizado a la tarifa de maquila pactada (US$/TMS). Los Barridos no llevan cargo de tratamiento - se valorizan aparte, como venta directa de concentrado (sección D).</p>
+    <h2><span class="idx">A</span> Ingreso por Cargo de Tratamiento y Composición del Mineral</h2>
+    <p class="desc">Tonelaje, ley de cabeza y tarifa de maquila de cada mineral que entra a Beneficio. Los Barridos no llevan cargo de tratamiento — se valorizan aparte, como venta directa de concentrado (sección D).</p>
     <div class="row" style="border-bottom:1px solid var(--line); padding-bottom:8px;">
       <div class="colhead">Etapa</div><div class="colhead">Tonelaje (tms)</div><div class="colhead">Tarifa US$/TMS</div><div class="colhead" style="text-align:right;">Ingreso US$</div>
     </div>
@@ -466,33 +484,49 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <div class="name">Recepción / Compra</div>
       <input type="number" id="ton_recepcion" value="67112.315" step="1">
       <input type="number" id="tarifa_recepcion" value="7.17" step="0.01">
-      <div class="subtotal" id="ing_recepcion">-</div>
+      <div class="subtotal" id="ing_recepcion">—</div>
     </div>
     <div class="row">
       <div class="name">Chancado</div>
       <input type="number" id="ton_chancado" value="75016.478" step="1">
       <input type="number" id="tarifa_chancado" value="6.75" step="0.01">
-      <div class="subtotal" id="ing_chancado">-</div>
+      <div class="subtotal" id="ing_chancado">—</div>
     </div>
-    <div class="row">
-      <div class="name">Beneficio Cobre <small>Tarifa</small></div>
-      <input type="number" id="ton_cutarifa" value="23478.871" step="1">
-      <input type="number" id="tarifa_cutarifa" value="27.50" step="0.01">
-      <div class="subtotal" id="ing_cutarifa">-</div>
+
+    <div class="grid3" style="margin-top:16px;">
+      <div class="lineblock">
+        <h3>Beneficio Cobre — Tarifa</h3>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tonelaje <small>tms</small></div><input type="number" id="ton_cutarifa" value="23478.871" step="1"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Cu <small>%</small></div><input type="number" id="leyCu_t" value="1.76749129" step="0.00000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Ag <small>gr/ton</small></div><input type="number" id="leyAg_t" value="3.764959567" step="0.000000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Au <small>gr/ton</small></div><input type="number" id="leyAu_t" value="0.474554334" step="0.000000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tarifa <small>US$/TMS</small></div><input type="number" id="tarifa_cutarifa" value="27.50" step="0.01"></div>
+        <div class="miniresult"><span class="l">Ingreso</span><span class="v" id="ing_cutarifa">US$ 0</span></div>
+      </div>
+
+      <div class="lineblock">
+        <h3>Beneficio Cobre — Mina</h3>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tonelaje <small>tms</small></div><input type="number" id="ton_cumina" value="32074.389" step="1"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Cu <small>%</small></div><input type="number" id="leyCu_m" value="0.739022651" step="0.00000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Ag <small>gr/ton</small></div><input type="number" id="leyAg_m" value="0" step="0.1"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Au <small>gr/ton</small></div><input type="number" id="leyAu_m" value="0" step="0.01"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tarifa <small>US$/TMS</small></div><input type="number" id="tarifa_cumina" value="27.50" step="0.01"></div>
+        <div class="miniresult"><span class="l">Ingreso</span><span class="v" id="ing_cumina">US$ 0</span></div>
+      </div>
+
+      <div class="lineblock">
+        <h3>Beneficio Oro</h3>
+        <span class="tag">solo si hay concentrado propio de oro</span>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tonelaje <small>tms</small></div><input type="number" id="ton_au" value="4034.17" step="1"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Cu <small>%</small></div><input type="number" id="leyCu_o" value="0" step="0.00000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Ag <small>gr/ton</small></div><input type="number" id="leyAg_o" value="0" step="0.000000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Ley Au <small>gr/ton</small></div><input type="number" id="leyAu_o" value="0" step="0.000000001"></div>
+        <div class="row" style="grid-template-columns:1.3fr 1fr;"><div class="name">Tarifa <small>US$/TMS</small></div><input type="number" id="tarifa_au" value="27.78" step="0.01"></div>
+        <div class="miniresult"><span class="l">Ingreso</span><span class="v" id="ing_au">US$ 0</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div class="name">Beneficio Cobre <small>Mina</small></div>
-      <input type="number" id="ton_cumina" value="32074.389" step="1">
-      <input type="number" id="tarifa_cumina" value="27.50" step="0.01">
-      <div class="subtotal" id="ing_cumina">-</div>
-    </div>
-    <div class="row">
-      <div class="name">Beneficio Oro <small>solo si hay concentrado propio</small></div>
-      <input type="number" id="ton_au" value="4034.17" step="1">
-      <input type="number" id="tarifa_au" value="27.78" step="0.01">
-      <div class="subtotal" id="ing_au">-</div>
-    </div>
-    <div class="miniresult"><span class="l">Total Ingreso</span><span class="v" id="total_ingreso">US$ 0</span></div>
+
+    <div class="miniresult" style="margin-top:16px;"><span class="l">Total Ingreso</span><span class="v" id="total_ingreso">US$ 0</span></div>
   </section>
 
   <div class="grid2">
@@ -525,13 +559,13 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
       <h2><span class="idx">C</span> Precios de Metales</h2>
       <p class="desc">Precio de liquidación del periodo, y cargos/descuentos comunes a todas las líneas.</p>
       <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
-        <div class="name">Cobre</div><input type="number" id="precio_cu" value="612.673" step="1"><div class="unit">cUS$/lb</div>
+        <div class="name">Cobre</div><input type="number" id="precio_cu" value="615.721" step="1"><div class="unit">cUS$/lb</div>
       </div>
       <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
-        <div class="name">Oro</div><input type="number" id="precio_au" value="4585.287" step="1"><div class="unit">US$/oz</div>
+        <div class="name">Oro</div><input type="number" id="precio_au" value="4241.758" step="1"><div class="unit">US$/oz</div>
       </div>
       <div class="row" style="grid-template-columns: 1.4fr 1fr 0.7fr;">
-        <div class="name">Plata</div><input type="number" id="precio_ag" value="77.83395" step="0.1"><div class="unit">US$/oz</div>
+        <div class="name">Plata</div><input type="number" id="precio_ag" value="66.73068" step="0.1"><div class="unit">US$/oz</div>
       </div>
       <details class="adv">
         <summary>Cargos, descuentos y factores (comunes a todas las líneas)</summary>
@@ -559,14 +593,14 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
     <div class="grid2">
       <!-- CU TARIFA -->
       <div class="lineblock" id="block_cutarifa">
-        <h3>Beneficio Cobre - Tarifa</h3>
-        <span class="tag">tonelaje = Beneficio Cu Tarifa (sección A). Fino de Oro (Beneficio Oro) se agrega a la valorización.</span>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
-          <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
+        <h3>Beneficio Cobre — Tarifa</h3>
+        <span class="tag">tonelaje y ley de cabeza: sección A. Fino de Beneficio Oro se agrega acá.</span>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;">
+          <div class="colhead">&nbsp;</div><div class="colhead">Rec. obtenida %</div>
         </div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre %</div><input type="number" id="leyCu_t" value="1.76749129" step="0.00000001"><input type="number" id="recCu_t" value="74.67074872" step="0.00000001"></div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Plata gr/ton</div><input type="number" id="leyAg_t" value="3.764959567" step="0.000000001"><input type="number" id="recAg_t" value="80.65" step="0.01"></div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Oro gr/ton</div><input type="number" id="leyAu_t" value="0.474554334" step="0.000000001"><input type="number" id="recAu_t" value="39.74" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Cobre</div><input type="number" id="recCu_t" value="74.67074872" step="0.00000001"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Plata</div><input type="number" id="recAg_t" value="80.65" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Oro</div><input type="number" id="recAu_t" value="39.74" step="0.01"></div>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley Concentrado Cu <small>real obtenida</small></div><input type="number" id="leyConcR_t" value="18.54592823" step="0.00000001"></div>
         <details class="adv"><summary>Pactado en contrato</summary>
           <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="colhead">&nbsp;</div><div class="colhead">Rec. pactada %</div><div class="colhead">Ley conc. pactada</div></div>
@@ -579,14 +613,14 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 
       <!-- CU MINA -->
       <div class="lineblock" id="block_cumina">
-        <h3>Beneficio Cobre - Mina</h3>
-        <span class="tag">tonelaje tomado de sección A</span>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;">
-          <div class="colhead">&nbsp;</div><div class="colhead">Ley cabeza</div><div class="colhead">Rec. obtenida %</div>
+        <h3>Beneficio Cobre — Mina</h3>
+        <span class="tag">tonelaje y ley de cabeza: sección A</span>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;">
+          <div class="colhead">&nbsp;</div><div class="colhead">Rec. obtenida %</div>
         </div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Cobre %</div><input type="number" id="leyCu_m" value="0.739022651" step="0.00000001"><input type="number" id="recCu_m" value="52.24" step="0.01"></div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Plata gr/ton</div><input type="number" id="leyAg_m" value="0" step="0.1"><input type="number" id="recAg_m" value="0" step="0.1"></div>
-        <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="name">Oro gr/ton</div><input type="number" id="leyAu_m" value="0" step="0.01"><input type="number" id="recAu_m" value="0" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Cobre</div><input type="number" id="recCu_m" value="52.24" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Plata</div><input type="number" id="recAg_m" value="0" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Oro</div><input type="number" id="recAu_m" value="0" step="0.1"></div>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley Concentrado Cu <small>real obtenida</small></div><input type="number" id="leyConcR_m" value="18.55" step="0.01"></div>
         <details class="adv"><summary>Pactado en contrato</summary>
           <div class="row" style="grid-template-columns: 1.3fr 1fr 1fr;"><div class="colhead">&nbsp;</div><div class="colhead">Rec. pactada %</div><div class="colhead">Ley conc. pactada</div></div>
@@ -599,7 +633,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 
       <!-- BARRIDOS -->
       <div class="lineblock" id="block_barridos">
-        <h3>Beneficio Cobre - Barridos</h3>
+        <h3>Beneficio Cobre — Barridos</h3>
         <span class="tag">venta directa de concentrado, sin comparación contractual</span>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Beneficio <small>tonelaje, tms</small></div><input type="number" id="ton_b" value="495.39" step="1"></div>
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley <small>cabeza Cu, %</small></div><input type="number" id="leyCu_b" value="1.66" step="0.01"></div>
@@ -607,14 +641,121 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
         <div class="row" style="grid-template-columns: 1.3fr 1fr;"><div class="name">Ley de Concentrado <small>%</small></div><input type="number" id="leyConc_b" value="18.55" step="0.01"></div>
         <div class="miniresult"><span class="l">Margen Barridos (venta directa)</span><span class="v" id="margen_b">US$ 0</span></div>
       </div>
-
     </div>
 
-    <p class="desc" style="margin-top:14px;">El Beneficio Oro no tiene margen metalúrgico propio ni entra al cálculo del margen de cobre: solo genera Ingreso por cargo de tratamiento (sección A). El fino de oro que sí se valoriza dentro del margen metalúrgico de Tarifa es el que aporta la propia ley de oro de esa línea (fila "Oro gr/ton" del bloque Tarifa), como subproducto del concentrado de cobre.</p>
+    <p class="desc" style="margin-top:14px;">El Beneficio Oro (tonelaje y leyes: sección A) no tiene margen metalúrgico propio: sus finos de Cu, Ag y Au se suman a los de Tarifa antes de calcular el margen de esa línea — se integran al mismo concentrado de cobre. El Ingreso por cargo de tratamiento de Beneficio Oro sigue aparte.</p>
 
     <div class="miniresult" style="margin-top:16px;"><span class="l">Margen Metalúrgico Total <small style="display:block;color:var(--text-dim);font-weight:400;">Tarifa (incl. Oro) + Mina</small></span><span class="v" id="margen_met_total">US$ 0</span></div>
   </section>
 
+</div>
+
+<div id="panel-negocio" class="panel">
+  <div style="max-width:1200px; margin:0 auto; padding:28px 6vw 0; display:flex; flex-direction:column; gap:20px;">
+
+    <section class="card">
+      <h2><span class="idx">N</span> Resultado de Negocio</h2>
+      <p class="desc">Método alternativo al de Maquila: en vez de cobrar cargo de tratamiento, la planta <b>compra el mineral</b> (a tarifa) y <b>vende el concentrado</b> producido. Usa el mismo tonelaje/leyes/recuperación de la pestaña Calculador.</p>
+    </section>
+
+    <div class="grid2">
+      <section class="card">
+        <h2><span class="idx">N1</span> Tarifa de Compra — Mineral de Cobre (Tarifa)</h2>
+        <p class="desc">Usa el Precio Cobre de la sección C del Calculador (mismo precio para comprar mineral y vender concentrado).</p>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Refino <small>cUS$/lb</small></div><input type="number" id="neg_cr_cu" value="4.3" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ley Concentrado Referencia <small>%</small></div><input type="number" id="neg_leyprod_cu" value="26.21" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Descuento Metalúrgico <small>%</small></div><input type="number" id="neg_dm_cu" value="3.8" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Fusión <small>US$/Tms</small></div><input type="number" id="neg_cf_cu" value="43" step="1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Recuperación Pactada Tarifa <small>%</small></div><input type="number" id="neg_rec_cu" value="90.98" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ley Mineral Referencia <small>%</small></div><input type="number" id="neg_leybase_cu" value="2.5" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Recep.+Chanc.+Benef. <small>US$/Tms</small></div><input type="number" id="neg_cargolix_cu" value="41.43" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Plan de Cierre <small>US$/Tms</small></div><input type="number" id="neg_cierre_cu" value="0.5" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Manejo/Stock <small>US$/Tms</small></div><input type="number" id="neg_manejo_cu" value="1.76" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Maquila <small>US$/Tms</small></div><input type="number" id="neg_maquila_cu" value="3" step="0.1"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="idx">N2</span> Tarifa de Compra — Mineral de Oro (Tarifa)</h2>
+        <p class="desc">Usa el Precio Oro de la sección C del Calculador.</p>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Refino <small>US$/oz</small></div><input type="number" id="neg_cr_au" value="6" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ley Concentrado Referencia <small>gr/ton</small></div><input type="number" id="neg_leyprod_au" value="50" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Descuento Metalúrgico <small>%</small></div><input type="number" id="neg_dm_au" value="4" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Fusión <small>US$/Tms</small></div><input type="number" id="neg_cf_au" value="43" step="1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Recuperación Pactada Tarifa <small>%</small></div><input type="number" id="neg_rec_au" value="67.42" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ley Mineral Referencia <small>gr/ton</small></div><input type="number" id="neg_leybase_au" value="5" step="0.1"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ley de Cabeza Real <small>gr/ton</small></div><input type="number" id="neg_leyreal_au" value="5" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Recep.+Chanc.+Benef. <small>US$/Tms</small></div><input type="number" id="neg_cargolix_au" value="41.7" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Plan de Cierre <small>US$/Tms</small></div><input type="number" id="neg_cierre_au" value="0.5" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Manejo/Stock <small>US$/Tms</small></div><input type="number" id="neg_manejo_au" value="1.76" step="0.01"></div>
+        <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Cargo Maquila <small>US$/Tms</small></div><input type="number" id="neg_maquila_au" value="3" step="0.1"></div>
+        <p class="desc" style="margin-top:8px; margin-bottom:0;">Tonelaje y ley de cabeza real de Cu/Ag/Au: usa el mismo mineral de "Beneficio Oro" de la sección A del Calculador.</p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2><span class="idx">N3</span> Costo Mineral — Mina</h2>
+      <p class="desc">La Mina no usa tarifa de mercado — es una tarifa interna fija, variable cada período.</p>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Tarifa Interna Mina <small>US$/Tms</small></div><input type="number" id="neg_tarifa_mina" value="20.8" step="0.1"></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="idx">N4</span> Costo de Mineral (compra a tarifa)</h2>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Mineral de Cobre — Tarifa</div><div class="subtotal" id="neg_costo_cu">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Mineral de Oro — Tarifa</div><div class="subtotal" id="neg_costo_au">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Mineral — Mina</div><div class="subtotal" id="neg_costo_mina">US$ 0</div></div>
+      <div class="miniresult"><span class="l">Total Costo Mineral</span><span class="v" id="neg_costo_total">US$ 0</span></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="idx">N5</span> Ingreso por Venta de Concentrado — Detalle</h2>
+      <p class="desc">Solo Concentrado de Cobre (Ag/Au como subproducto). Mismo cálculo NSR de la pestaña Calculador, con el detalle abierto.</p>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr; border-bottom:1px solid var(--line); padding-bottom:8px;">
+        <div class="colhead">Concepto</div><div class="colhead" style="text-align:right;">Tarifa</div><div class="colhead" style="text-align:right;">Mina</div>
+      </div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Fino Cobre <small>tmf</small></div><div class="subtotal" id="neg_fcuc_t">0</div><div class="subtotal" id="neg_fcuc_m">0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Fino Plata <small>kgf</small></div><div class="subtotal" id="neg_fagc_t">0</div><div class="subtotal" id="neg_fagc_m">0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Fino Oro <small>kgf</small></div><div class="subtotal" id="neg_fauc_t">0</div><div class="subtotal" id="neg_fauc_m">0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Peso Seco Concentrado <small>tms</small></div><div class="subtotal" id="neg_psc_t">0</div><div class="subtotal" id="neg_psc_m">0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Valor Neto Cobre</div><div class="subtotal" id="neg_vcu_t">US$ 0</div><div class="subtotal" id="neg_vcu_m">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Valor Neto Plata</div><div class="subtotal" id="neg_vag_t">US$ 0</div><div class="subtotal" id="neg_vag_m">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Valor Neto Oro</div><div class="subtotal" id="neg_vau_t">US$ 0</div><div class="subtotal" id="neg_vau_m">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.5fr 1fr 1fr;"><div class="name">Valor Finos (subtotal)</div><div class="subtotal" id="neg_ing_tarifa">US$ 0</div><div class="subtotal" id="neg_ing_mina">US$ 0</div></div>
+      <div class="miniresult"><span class="l">Total Ingreso Venta Concentrado</span><span class="v" id="neg_ing_total">US$ 0</span></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="idx">N6</span> Resultado hasta Concentrado</h2>
+      <p class="desc">Venta como concentrado (valor NSR, neto de cargos de fusión/refino que cobra el fundidor externo).</p>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Costos de Proceso</div><div class="subtotal" id="neg_costos_proceso">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Margen Barridos</div><div class="subtotal" id="neg_barridos">US$ 0</div></div>
+      <div class="miniresult"><span class="l">RESULTADO HASTA CONCENTRADO</span><span class="v" id="neg_resultado">US$ 0</span></div>
+      <div class="miniresult"><span class="l">Resultado Maquila <small style="display:block;color:var(--text-dim);font-weight:400;">referencia, misma pestaña Calculador</small></span><span class="v" id="neg_resultado_maquila">US$ 0</span></div>
+      <div class="miniresult"><span class="l">Diferencia (Concentrado − Maquila)</span><span class="v" id="neg_diferencia">US$ 0</span></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="idx">N7</span> Transformación a Cátodos (integración hacia adelante)</h2>
+      <p class="desc">En vez de vender el concentrado, ENAMI funde y refina por su cuenta y vende cátodo terminado a precio LME. Valores de referencia — ajústalos con tus costos reales.</p>
+      <div class="row" style="grid-template-columns: 1.8fr 1fr;"><div class="name">Premio/Descuento Cátodo sobre LME <small>cUS$/lb</small></div><input type="number" id="neg_premio_catodo" value="0" step="0.1"></div>
+      <div class="row" style="grid-template-columns: 1.8fr 1fr;"><div class="name">Costo Fundición Propia <small>US$/t concentrado</small></div><input type="number" id="neg_costo_fundicion" value="43" step="1"></div>
+      <div class="row" style="grid-template-columns: 1.8fr 1fr;"><div class="name">Costo Refinería Propia <small>US$/t cátodo</small></div><input type="number" id="neg_costo_refineria" value="95" step="1"></div>
+      <div class="row" style="grid-template-columns: 1.8fr 1fr;"><div class="name">Pérdida Metalúrgica Fund.+Ref. <small>%</small></div><input type="number" id="neg_perdida_fundicion" value="1.5" step="0.1"></div>
+      <div class="row" style="grid-template-columns: 1.8fr 1fr;"><div class="name">Transporte Concentrado→Fundición <small>US$/t concentrado</small></div><input type="number" id="neg_transporte" value="20" step="1"></div>
+      <p class="desc" style="margin-top:8px; margin-bottom:0;">Plata y Oro se mantienen valorizados igual que en la venta de concentrado (crédito de subproducto en la fundición/refinería).</p>
+    </section>
+
+    <section class="card">
+      <h2><span class="idx">N8</span> Resultado hasta Cátodos</h2>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Ingreso Venta Cátodos <small>Cu a precio LME, Ag/Au igual que concentrado</small></div><div class="subtotal" id="neg_ing_catodo">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Costo Fundición + Refinería + Transporte</div><div class="subtotal" id="neg_costo_transform">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Costo Mineral + Costos de Proceso + Gastos Admin</div><div class="subtotal" id="neg_costo_base">US$ 0</div></div>
+      <div class="row" style="grid-template-columns: 1.6fr 1fr;"><div class="name">Margen Barridos</div><div class="subtotal" id="neg_barridos2">US$ 0</div></div>
+      <div class="miniresult"><span class="l">RESULTADO HASTA CÁTODOS</span><span class="v" id="neg_resultado_catodo">US$ 0</span></div>
+      <div class="miniresult"><span class="l">Diferencia (Cátodos − Concentrado)</span><span class="v" id="neg_diferencia_catodo">US$ 0</span></div>
+      <p class="desc" style="margin-top:8px;">Si esta diferencia es positiva, integrarse hacia adelante (fundir y refinar en vez de vender concentrado) conviene con estos supuestos de costo.</p>
+    </section>
+
+  </div>
 </div>
 
 <div id="panel-sens" class="panel">
@@ -633,8 +774,8 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
         <h2><span class="idx">R</span> Resultado del Escenario</h2>
         <p class="desc">Comparación entre el caso base (pestaña Calculador) y el escenario con los ajustes de la izquierda.</p>
         <div class="scenario-box">
-          <div class="row2"><span class="l">Margen de Planta - Base</span><span class="v" id="sens_base">US$ 0</span></div>
-          <div class="row2"><span class="l">Margen de Planta - Escenario</span><span class="v" id="sens_escenario">US$ 0</span></div>
+          <div class="row2"><span class="l">Margen de Planta — Base</span><span class="v" id="sens_base">US$ 0</span></div>
+          <div class="row2"><span class="l">Margen de Planta — Escenario</span><span class="v" id="sens_escenario">US$ 0</span></div>
           <div class="row2 total"><span class="l">Diferencia</span><span class="v" id="sens_delta">US$ 0</span></div>
         </div>
       </section>
@@ -643,6 +784,42 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
         <h2><span class="idx">T</span> Tornado de Sensibilidad</h2>
         <p class="desc">Impacto individual de mover cada variable ±10% desde su valor base, dejando las demás fijas. Ordenado de mayor a menor impacto.</p>
         <div id="tornadoList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="panel-sensneg" class="panel">
+  <div class="sens-grid">
+    <section class="card">
+      <h2><span class="idx">S</span> Variables a Sensibilizar — Negocio</h2>
+      <p class="desc">Mueve una o varias variables (% respecto al valor base) y observa el efecto combinado en el Resultado hasta Concentrado y hasta Cátodos.</p>
+      <div id="sliderListNeg"></div>
+      <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+        <button class="reset-btn" onclick="resetSlidersNeg()">Restablecer a base</button>
+      </div>
+    </section>
+
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <section class="card">
+        <h2><span class="idx">R</span> Resultado del Escenario</h2>
+        <p class="desc">Comparación entre el caso base y el escenario con los ajustes de la izquierda.</p>
+        <div class="scenario-box">
+          <div class="row2"><span class="l">Hasta Concentrado — Base</span><span class="v" id="sensneg_base_conc">US$ 0</span></div>
+          <div class="row2"><span class="l">Hasta Concentrado — Escenario</span><span class="v" id="sensneg_esc_conc">US$ 0</span></div>
+          <div class="row2 total"><span class="l">Diferencia</span><span class="v" id="sensneg_delta_conc">US$ 0</span></div>
+        </div>
+        <div class="scenario-box" style="margin-top:12px;">
+          <div class="row2"><span class="l">Hasta Cátodos — Base</span><span class="v" id="sensneg_base_cat">US$ 0</span></div>
+          <div class="row2"><span class="l">Hasta Cátodos — Escenario</span><span class="v" id="sensneg_esc_cat">US$ 0</span></div>
+          <div class="row2 total"><span class="l">Diferencia</span><span class="v" id="sensneg_delta_cat">US$ 0</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="idx">T</span> Tornado de Sensibilidad — Hasta Concentrado</h2>
+        <p class="desc">Impacto individual de mover cada variable ±10% desde su valor base, sobre el Resultado hasta Concentrado.</p>
+        <div id="tornadoListNeg"></div>
       </section>
     </div>
   </div>
@@ -658,6 +835,38 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
   </div>
 </div>
 
+<div id="panel-breakeven" class="panel">
+  <div style="max-width:1200px; margin:0 auto; padding:28px 6vw 0; display:flex; flex-direction:column; gap:20px;">
+
+    <section class="card">
+      <h2><span class="idx">PE</span> Punto de Equilibrio de Planta</h2>
+      <p class="desc">Para cada variable, se calcula el valor donde el resultado del mes queda en cero, dejando todo lo demás fijo en su valor actual — comparado en paralelo entre Maquila, Negocio hasta Concentrado y Negocio hasta Cátodos. Visible solo para administradores.</p>
+      <div class="be-table">
+        <div class="be-row be-head">
+          <div>Variable</div><div>Maquila</div><div>Negocio — Concentrado</div><div>Negocio — Cátodos</div>
+        </div>
+        <div class="be-row">
+          <div class="be-lbl">Tonelaje de Beneficio <small>(escala proporcional Tarifa+Mina+Oro, y Recepción/Chancado)</small></div>
+          <div id="be_ton_maquila">—</div><div id="be_ton_conc">—</div><div id="be_ton_cat">—</div>
+        </div>
+        <div class="be-row">
+          <div class="be-lbl">Precio Cobre <small>cUS$/lb</small></div>
+          <div id="be_precio_maquila">—</div><div id="be_precio_conc">—</div><div id="be_precio_cat">—</div>
+        </div>
+        <div class="be-row">
+          <div class="be-lbl">Ley de Cabeza Cu Tarifa <small>%</small></div>
+          <div id="be_ley_maquila">—</div><div id="be_ley_conc">—</div><div id="be_ley_cat">—</div>
+        </div>
+        <div class="be-row">
+          <div class="be-lbl">Recuperación Cu Tarifa <small>% obtenida</small></div>
+          <div id="be_rec_maquila">—</div><div id="be_rec_conc">—</div><div id="be_rec_cat">—</div>
+        </div>
+      </div>
+      <p class="desc" style="margin-top:14px;">El badge junto a cada valor indica si, con los datos actuales, ese método ya está <span class="be-badge be-ok">sobre el equilibrio</span> o <span class="be-badge be-bad">bajo el equilibrio</span> en esta dimensión.</p>
+    </section>
+
+  </div>
+</div>
 <div class="sticky">
   <div class="sticky-inner">
     <div class="breakdown">
@@ -673,7 +882,7 @@ l6 40 25 -37 c14 -20 28 -37 33 -37 4 0 7 23 7 50 0 30 -4 50 -11 50 -7 0 -10
 </div>
 
 <footer class="note">
-  Modelo simplificado de referencia. La Ley de Concentrado "real" es editable en cada línea - si la dejas igual a la pactada, el margen refleja solo la diferencia de recuperación. Barridos se valoriza como venta directa de concentrado (con su propia ley de concentrado), sin comparación contractual. Gastos Administrativos se descuenta una sola vez, a nivel de planta.
+  Modelo simplificado de referencia. La Ley de Concentrado "real" es editable en cada línea — si la dejas igual a la pactada, el margen refleja solo la diferencia de recuperación. Barridos se valoriza como venta directa de concentrado (con su propia ley de concentrado), sin comparación contractual. Gastos Administrativos se descuenta una sola vez, a nivel de planta.
 </footer>
 
 <script>
@@ -707,7 +916,8 @@ function readParams(){
     recCu_m:num('recCu_m'), recAg_m:num('recAg_m'), recAu_m:num('recAu_m'),
     recCuC_m:num('recCuC_m'), recAgC_m:num('recAgC_m'), recAuC_m:num('recAuC_m'),
     leyConcC_m:num('leyConcC_m'), leyConcR_m:num('leyConcR_m'),
-    ton_b:num('ton_b'), leyCu_b:num('leyCu_b'), recCu_b:num('recCu_b'), leyConc_b:num('leyConc_b')
+    ton_b:num('ton_b'), leyCu_b:num('leyCu_b'), recCu_b:num('recCu_b'), leyConc_b:num('leyConc_b'),
+    leyCu_o:num('leyCu_o'), leyAg_o:num('leyAg_o'), leyAu_o:num('leyAu_o')
   };
 }
 
@@ -721,10 +931,11 @@ function computeModel(P){
 
   const DMcu=P.DMcu/100, DMag=P.DMag/100, DMau=P.DMau/100;
 
-  function valorFinos(psm, leyCu_pct, leyAg_gt, leyAu_gt, recCu_pct, recAg_pct, recAu_pct, leyConcPrimary, tipo){
-    const Fcum = psm*leyCu_pct/100;
-    const Fagm = psm*leyAg_gt/1000;
-    const Faum = psm*leyAu_gt/1000;
+  function finosEnMineral(psm, leyCu_pct, leyAg_gt, leyAu_gt){
+    return { Fcum: psm*leyCu_pct/100, Fagm: psm*leyAg_gt/1000, Faum: psm*leyAu_gt/1000 };
+  }
+
+  function valorFinosDesdeFino(Fcum, Fagm, Faum, recCu_pct, recAg_pct, recAu_pct, leyConcPrimary, tipo){
     const Fcuc = Fcum*recCu_pct/100;
     const Fagc = Fagm*recAg_pct/100;
     const Fauc = Faum*recAu_pct/100;
@@ -734,24 +945,37 @@ function computeModel(P){
     const vCu = Fcuc*(1-DMcu)*P.Ka*(P.Pcu-P.CRcu) - (tipo==='Cu'? P.CFcu*PSC : 0);
     const vAg = Fagc*(1-DMag)*(1000/P.Kb)*(P.Pag-P.CRag);
     const vAu = Fauc*(1-DMau)*(1000/P.Kb)*(P.Pau-P.CRau) - (tipo==='Au'? P.CFau*PSC : 0);
-    return vCu+vAg+vAu;
+    return { total: vCu+vAg+vAu, vCu, vAg, vAu, Fcuc, Fagc, Fauc, PSC };
   }
 
-  function margenLinea(psm, leyCu, leyAg, leyAu, recCu, recAg, recAu, recCuC, recAgC, recAuC, leyConcC, leyConcR, tipo){
-    const vContrato = valorFinos(psm, leyCu, leyAg, leyAu, recCuC, recAgC, recAuC, leyConcC, tipo);
-    const vPlanta   = valorFinos(psm, leyCu, leyAg, leyAu, recCu,  recAg,  recAu,  leyConcR, tipo);
-    return vPlanta - vContrato;
+  function valorFinos(psm, leyCu_pct, leyAg_gt, leyAu_gt, recCu_pct, recAg_pct, recAu_pct, leyConcPrimary, tipo){
+    const f = finosEnMineral(psm, leyCu_pct, leyAg_gt, leyAu_gt);
+    return valorFinosDesdeFino(f.Fcum, f.Fagm, f.Faum, recCu_pct, recAg_pct, recAu_pct, leyConcPrimary, tipo).total;
   }
 
-  const margen_t = margenLinea(P.ton_t, P.leyCu_t, P.leyAg_t, P.leyAu_t, P.recCu_t, P.recAg_t, P.recAu_t, P.recCuC_t, P.recAgC_t, P.recAuC_t, P.leyConcC_t, P.leyConcR_t, 'Cu');
-  const margen_m = margenLinea(P.ton_m, P.leyCu_m, P.leyAg_m, P.leyAu_m, P.recCu_m, P.recAg_m, P.recAu_m, P.recCuC_m, P.recAgC_m, P.recAuC_m, P.leyConcC_m, P.leyConcR_m, 'Cu');
+  function margenLinea(psm, leyCu, leyAg, leyAu, recCu, recAg, recAu, recCuC, recAgC, recAuC, leyConcC, leyConcR, tipo, extraFino){
+    let f = finosEnMineral(psm, leyCu, leyAg, leyAu);
+    if(extraFino){
+      f = { Fcum: f.Fcum+extraFino.Fcum, Fagm: f.Fagm+extraFino.Fagm, Faum: f.Faum+extraFino.Faum };
+    }
+    const dContrato = valorFinosDesdeFino(f.Fcum, f.Fagm, f.Faum, recCuC, recAgC, recAuC, leyConcC, tipo);
+    const dPlanta   = valorFinosDesdeFino(f.Fcum, f.Fagm, f.Faum, recCu,  recAg,  recAu,  leyConcR, tipo);
+    return { margen: dPlanta.total - dContrato.total, vPlanta: dPlanta.total, detalle: dPlanta };
+  }
+
+  // Fino de Beneficio Oro (Cu/Ag/Au propios de esa línea) — se suma al concentrado de Tarifa
+  const finoOro = finosEnMineral(P.ton_o, P.leyCu_o, P.leyAg_o, P.leyAu_o);
+  const rTarifa = margenLinea(P.ton_t, P.leyCu_t, P.leyAg_t, P.leyAu_t, P.recCu_t, P.recAg_t, P.recAu_t, P.recCuC_t, P.recAgC_t, P.recAuC_t, P.leyConcC_t, P.leyConcR_t, 'Cu', finoOro);
+  const rMina = margenLinea(P.ton_m, P.leyCu_m, P.leyAg_m, P.leyAu_m, P.recCu_m, P.recAg_m, P.recAu_m, P.recCuC_m, P.recAgC_m, P.recAuC_m, P.leyConcC_m, P.leyConcR_m, 'Cu');
+  const margen_t = rTarifa.margen, margen_m = rMina.margen;
+  const valorConcTarifaReal = rTarifa.vPlanta, valorConcMinaReal = rMina.vPlanta;
   const margenMetTotal = margen_t + margen_m;
 
   const margenBarridos = valorFinos(P.ton_b, P.leyCu_b, 0, 0, P.recCu_b, 0, 0, P.leyConc_b, 'Cu');
 
   const margenPlanta = margenProceso + margenMetTotal + margenBarridos - P.gastosAdmin;
 
-  return { ing_r, ing_c, ing_t, ing_m, ing_o, ingresoTotal, costosTotal, margenProceso, margen_t, margen_m, margenMetTotal, margenBarridos, margenPlanta };
+  return { ing_r, ing_c, ing_t, ing_m, ing_o, ingresoTotal, costosTotal, margenProceso, margen_t, margen_m, margenMetTotal, margenBarridos, margenPlanta, valorConcTarifaReal, valorConcMinaReal, detalleTarifa: rTarifa.detalle, detalleMina: rMina.detalle };
 }
 
 function calc(){
@@ -769,11 +993,11 @@ function calc(){
   setVal('margen_b', R.margenBarridos, true);
 
   // ---- Mezcla Global de Cobre: ley de cabeza, recuperación y ley de concentrado ponderadas por fino ----
-  const Fcum_t = P.ton_t*P.leyCu_t/100, Fcum_m = P.ton_m*P.leyCu_m/100;
+  const Fcum_t = P.ton_t*P.leyCu_t/100 + P.ton_o*P.leyCu_o/100, Fcum_m = P.ton_m*P.leyCu_m/100;
   const Fcuc_t = Fcum_t*P.recCu_t/100, Fcuc_m = Fcum_m*P.recCu_m/100;
   const PSC_t = P.leyConcR_t>0 ? Fcuc_t/(P.leyConcR_t/100) : 0;
   const PSC_m = P.leyConcR_m>0 ? Fcuc_m/(P.leyConcR_m/100) : 0;
-  const tonBenCu = P.ton_t + P.ton_m;
+  const tonBenCu = P.ton_t + P.ton_m + P.ton_o;
   const finoTotal = Fcum_t + Fcum_m;
   const finoConcTotal = Fcuc_t + Fcuc_m;
   const pscTotal = PSC_t + PSC_m;
@@ -785,7 +1009,7 @@ function calc(){
   document.getElementById('genLeyConc').textContent = leyConcPond.toFixed(2)+'% Cu';
 
   const totalBen = P.ton_t + P.ton_m + P.ton_b + P.ton_o;
-  const pctFmt = (v)=> totalBen>0 ? (v/totalBen*100).toFixed(1)+'%' : '-';
+  const pctFmt = (v)=> totalBen>0 ? (v/totalBen*100).toFixed(1)+'%' : '—';
   document.getElementById('benTarifaTon').innerHTML = P.ton_t.toLocaleString('es-CL')+'<span class="unit">tms</span>';
   document.getElementById('benTarifaPct').textContent = pctFmt(P.ton_t);
   document.getElementById('benMinaTon').innerHTML = P.ton_m.toLocaleString('es-CL')+'<span class="unit">tms</span>';
@@ -806,6 +1030,249 @@ function calc(){
   heroEl.style.color = R.margenPlanta>=0 ? 'var(--green)' : 'var(--red)';
 
   renderSensitivity(P, R);
+  renderNegocio(P, R);
+  renderBreakeven(P);
+}
+
+// ================= NEGOCIO (Costo Mineral / Venta Concentrado) =================
+function readNegocioParams(){
+  return {
+    crCu: num('neg_cr_cu'), leyProdCu: num('neg_leyprod_cu'), dmCu: num('neg_dm_cu'), cfCu: num('neg_cf_cu'),
+    recCu: num('neg_rec_cu'), leyBaseCu: num('neg_leybase_cu'), cargoLixCu: num('neg_cargolix_cu'),
+    cierreCu: num('neg_cierre_cu'), manejoCu: num('neg_manejo_cu'), maquilaCu: num('neg_maquila_cu'),
+    crAu: num('neg_cr_au'), leyProdAu: num('neg_leyprod_au'), dmAu: num('neg_dm_au'), cfAu: num('neg_cf_au'),
+    recAu: num('neg_rec_au'), leyBaseAu: num('neg_leybase_au'), leyRealAu: num('neg_leyreal_au'),
+    cargoLixAu: num('neg_cargolix_au'), cierreAu: num('neg_cierre_au'), manejoAu: num('neg_manejo_au'), maquilaAu: num('neg_maquila_au'),
+    tarifaMina: num('neg_tarifa_mina'),
+    premioCatodo: num('neg_premio_catodo'), costoFundicion: num('neg_costo_fundicion'), costoRefineria: num('neg_costo_refineria'),
+    perdidaFundicion: num('neg_perdida_fundicion'), transporte: num('neg_transporte')
+  };
+}
+
+// ---- Modelo puro de Negocio: recibe P (Calculador), R (resultados Calculador) y N (parámetros Negocio) ----
+function computeNegocioModel(P, R, N){
+  const Ka = P.Ka, Kb = P.Kb;
+
+  const valorNetoCu = 22.046223*(P.Pcu-N.crCu)/100*N.leyProdCu*(1-N.dmCu/100)-N.cfCu;
+  const baseCu = valorNetoCu*N.recCu/100*N.leyBaseCu/N.leyProdCu - N.cargoLixCu - N.cierreCu - N.manejoCu - N.maquilaCu;
+  const escalaCu = valorNetoCu*N.recCu/100/N.leyProdCu;
+  const costoMineralCu = (baseCu + escalaCu*(P.leyCu_t - N.leyBaseCu)) * P.ton_t;
+
+  const valorNetoAu = (P.Pau-N.crAu)*(1-N.dmAu/100)*N.leyProdAu/31.10348-N.cfAu;
+  const baseAu = valorNetoAu*N.recAu/100/N.leyProdAu*N.leyBaseAu - N.cargoLixAu - N.cierreAu - N.manejoAu - N.maquilaAu;
+  const escalaAu = valorNetoAu*N.recAu/100/N.leyProdAu;
+  const costoMineralAu = (baseAu + escalaAu*(N.leyRealAu - N.leyBaseAu)) * P.ton_o;
+
+  const costoMineralMina = N.tarifaMina * P.ton_m;
+  const costoMineralTotal = costoMineralCu + costoMineralAu + costoMineralMina;
+
+  const dT = R.detalleTarifa, dM = R.detalleMina;
+  const ingresoVentaTotal = R.valorConcTarifaReal + R.valorConcMinaReal;
+
+  const costoBase = costoMineralTotal + R.costosTotal + P.gastosAdmin;
+  const resultadoNegocio = ingresoVentaTotal - costoBase + R.margenBarridos;
+
+  const finoCuTotal = dT.Fcuc + dM.Fcuc;
+  const finoCuCatodo = finoCuTotal * (1 - N.perdidaFundicion/100);
+  const pscTotal = dT.PSC + dM.PSC;
+  const ingresoCatodoCu = finoCuCatodo*Ka*(P.Pcu + N.premioCatodo);
+  const ingresoCatodoAgAu = (dT.vAg+dM.vAg) + (dT.vAu+dM.vAu);
+  const ingresoVentaCatodo = ingresoCatodoCu + ingresoCatodoAgAu;
+  const costoTransformacion = pscTotal*(N.costoFundicion + N.transporte) + finoCuCatodo*N.costoRefineria;
+  const resultadoCatodo = ingresoVentaCatodo - costoTransformacion - costoBase + R.margenBarridos;
+
+  return { costoMineralCu, costoMineralAu, costoMineralMina, costoMineralTotal, ingresoVentaTotal, costoBase,
+           resultadoNegocio, ingresoVentaCatodo, costoTransformacion, resultadoCatodo };
+}
+
+function renderNegocio(P, R){
+  const N = readNegocioParams();
+  const M = computeNegocioModel(P, R, N);
+
+  setVal('neg_costo_cu', M.costoMineralCu);
+  setVal('neg_costo_au', M.costoMineralAu);
+  setVal('neg_costo_mina', M.costoMineralMina);
+  setVal('neg_costo_total', M.costoMineralTotal);
+
+  const dT = R.detalleTarifa, dM = R.detalleMina;
+  document.getElementById('neg_fcuc_t').textContent = dT.Fcuc.toFixed(2);
+  document.getElementById('neg_fcuc_m').textContent = dM.Fcuc.toFixed(2);
+  document.getElementById('neg_fagc_t').textContent = dT.Fagc.toFixed(2);
+  document.getElementById('neg_fagc_m').textContent = dM.Fagc.toFixed(2);
+  document.getElementById('neg_fauc_t').textContent = dT.Fauc.toFixed(2);
+  document.getElementById('neg_fauc_m').textContent = dM.Fauc.toFixed(2);
+  document.getElementById('neg_psc_t').textContent = dT.PSC.toFixed(2);
+  document.getElementById('neg_psc_m').textContent = dM.PSC.toFixed(2);
+  setVal('neg_vcu_t', dT.vCu); setVal('neg_vcu_m', dM.vCu);
+  setVal('neg_vag_t', dT.vAg); setVal('neg_vag_m', dM.vAg);
+  setVal('neg_vau_t', dT.vAu); setVal('neg_vau_m', dM.vAu);
+  setVal('neg_ing_tarifa', R.valorConcTarifaReal);
+  setVal('neg_ing_mina', R.valorConcMinaReal);
+  setVal('neg_ing_total', M.ingresoVentaTotal);
+
+  setVal('neg_costos_proceso', R.costosTotal);
+  setVal('neg_barridos', R.margenBarridos);
+  setVal('neg_barridos2', R.margenBarridos);
+
+  const el1 = document.getElementById('neg_resultado');
+  el1.textContent = fmt(M.resultadoNegocio); el1.className='v'+(M.resultadoNegocio>=0?' pos':' neg');
+  const el2 = document.getElementById('neg_resultado_maquila');
+  el2.textContent = fmt(R.margenPlanta); el2.className='v'+(R.margenPlanta>=0?' pos':' neg');
+  const diferencia = M.resultadoNegocio - R.margenPlanta;
+  const el3 = document.getElementById('neg_diferencia');
+  el3.textContent = (diferencia>=0?'+':'-')+fmt(Math.abs(diferencia));
+  el3.className='v'+(diferencia>=0?' pos':' neg');
+
+  setVal('neg_ing_catodo', M.ingresoVentaCatodo);
+  setVal('neg_costo_transform', M.costoTransformacion);
+  setVal('neg_costo_base', M.costoBase);
+  const el4 = document.getElementById('neg_resultado_catodo');
+  el4.textContent = fmt(M.resultadoCatodo); el4.className='v'+(M.resultadoCatodo>=0?' pos':' neg');
+  const difCatodo = M.resultadoCatodo - M.resultadoNegocio;
+  const el5 = document.getElementById('neg_diferencia_catodo');
+  el5.textContent = (difCatodo>=0?'+':'-')+fmt(Math.abs(difCatodo));
+  el5.className='v'+(difCatodo>=0?' pos':' neg');
+
+  renderSensitivityNegocio(P, R, N, M);
+}
+
+// ================= SENSIBILIDAD NEGOCIO =================
+const NEG_SENS_VARS = [
+  {key:'ton_t', scope:'P', label:'Tonelaje Cobre Tarifa', unit:'tms'},
+  {key:'ton_m', scope:'P', label:'Tonelaje Cobre Mina', unit:'tms'},
+  {key:'ton_o', scope:'P', label:'Tonelaje Oro', unit:'tms'},
+  {key:'leyCu_t', scope:'P', label:'Ley Cu Tarifa (cabeza)', unit:'%'},
+  {key:'Pcu', scope:'P', label:'Precio Cobre (compartido)', unit:'cUS$/lb'},
+  {key:'Pau', scope:'P', label:'Precio Oro (compartido)', unit:'US$/oz'},
+  {key:'recCu', scope:'N', label:'Recuperación Pactada Cu Tarifa', unit:'%'},
+  {key:'recAu', scope:'N', label:'Recuperación Pactada Au Tarifa', unit:'%'},
+  {key:'tarifaMina', scope:'N', label:'Tarifa Interna Mina', unit:'US$/t'},
+  {key:'leyRealAu', scope:'N', label:'Ley Cabeza Real Oro', unit:'gr/ton'},
+  {key:'premioCatodo', scope:'N', label:'Premio Cátodo', unit:'cUS$/lb'},
+  {key:'costoFundicion', scope:'N', label:'Costo Fundición Propia', unit:'US$/t'},
+  {key:'costoRefineria', scope:'N', label:'Costo Refinería Propia', unit:'US$/t'},
+  {key:'perdidaFundicion', scope:'N', label:'Pérdida Metalúrgica Fund.+Ref.', unit:'%'},
+  {key:'transporte', scope:'N', label:'Transporte Concentrado→Fundición', unit:'US$/t'},
+];
+const sliderStateNeg = {}; NEG_SENS_VARS.forEach(v=>sliderStateNeg[v.key]=0);
+let slidersNegBuilt = false;
+
+function buildSlidersNeg(){
+  const container = document.getElementById('sliderListNeg');
+  container.innerHTML = '';
+  NEG_SENS_VARS.forEach(v=>{
+    const row = document.createElement('div');
+    row.className='slider-row';
+    row.innerHTML =
+      '<div class="top"><span class="name">'+v.label+'</span><span class="delta" id="sn_delta_'+v.key+'">0%</span></div>'+
+      '<input type="range" min="-50" max="50" step="1" value="0" id="sn_slider_'+v.key+'">'+
+      '<div class="vals"><span class="basev" id="sn_baseval_'+v.key+'">base: —</span>'+
+      '<input type="number" class="newval-input" id="sn_newval_'+v.key+'" title="Ingresa el valor nuevo directamente"></div>';
+    container.appendChild(row);
+  });
+  NEG_SENS_VARS.forEach(v=>{
+    document.getElementById('sn_slider_'+v.key).addEventListener('input', (e)=>{
+      sliderStateNeg[v.key] = parseFloat(e.target.value);
+      calc();
+    });
+    document.getElementById('sn_newval_'+v.key).addEventListener('input', (e)=>{
+      const typed = parseFloat(e.target.value);
+      if(isNaN(typed)) return;
+      const base = lastNegBase ? lastNegBase[v.key] : 0;
+      if(base){ sliderStateNeg[v.key] = (typed/base - 1)*100; }
+      const sl = document.getElementById('sn_slider_'+v.key);
+      sl.value = Math.max(-50, Math.min(50, sliderStateNeg[v.key]));
+      calc();
+    });
+  });
+  slidersNegBuilt = true;
+}
+
+function resetSlidersNeg(){
+  NEG_SENS_VARS.forEach(v=>{
+    sliderStateNeg[v.key]=0;
+    const el=document.getElementById('sn_slider_'+v.key);
+    if(el) el.value=0;
+  });
+  calc();
+}
+
+let lastNegBase = null;
+
+function renderSensitivityNegocio(P, R, N, M){
+  if(!slidersNegBuilt) buildSlidersNeg();
+
+  // valor base de cada variable (según su scope)
+  const baseVals = {};
+  NEG_SENS_VARS.forEach(v=>{ baseVals[v.key] = v.scope==='P' ? P[v.key] : N[v.key]; });
+  lastNegBase = baseVals;
+
+  // ---- Escenario combinado ----
+  const Pesc = Object.assign({}, P);
+  const Nesc = Object.assign({}, N);
+  NEG_SENS_VARS.forEach(v=>{
+    const pct = sliderStateNeg[v.key]/100;
+    const base = baseVals[v.key];
+    const nuevo = base*(1+pct);
+    if(v.scope==='P') Pesc[v.key] = nuevo; else Nesc[v.key] = nuevo;
+    const d = sliderStateNeg[v.key];
+    const dEl = document.getElementById('sn_delta_'+v.key);
+    dEl.textContent = (d>=0?'+':'')+d.toFixed(1)+'%';
+    dEl.className = 'delta'+(d>0?' pos':d<0?' neg':'');
+    document.getElementById('sn_baseval_'+v.key).textContent = 'base: '+base.toLocaleString('es-CL',{maximumFractionDigits:4})+' '+v.unit;
+    const newvalEl = document.getElementById('sn_newval_'+v.key);
+    if(document.activeElement !== newvalEl){ newvalEl.value = round3(nuevo); }
+  });
+  const Resc = computeModel(Pesc);
+  const Mesc = computeNegocioModel(Pesc, Resc, Nesc);
+
+  setVal('sensneg_base_conc', M.resultadoNegocio);
+  setVal('sensneg_esc_conc', Mesc.resultadoNegocio);
+  const dConc = Mesc.resultadoNegocio - M.resultadoNegocio;
+  const elc = document.getElementById('sensneg_delta_conc');
+  elc.textContent = (dConc>=0?'+':'-')+fmt(Math.abs(dConc)); elc.className='v'+(dConc>=0?' pos':' neg');
+
+  setVal('sensneg_base_cat', M.resultadoCatodo);
+  setVal('sensneg_esc_cat', Mesc.resultadoCatodo);
+  const dCat = Mesc.resultadoCatodo - M.resultadoCatodo;
+  const elk = document.getElementById('sensneg_delta_cat');
+  elk.textContent = (dCat>=0?'+':'-')+fmt(Math.abs(dCat)); elk.className='v'+(dCat>=0?' pos':' neg');
+
+  // ---- Tornado sobre Resultado hasta Concentrado ----
+  const impacts = NEG_SENS_VARS.map(v=>{
+    const base = baseVals[v.key];
+    let rUp, rDown;
+    if(v.scope==='P'){
+      const Pup = Object.assign({}, P); Pup[v.key] = base*1.10;
+      const Pdown = Object.assign({}, P); Pdown[v.key] = base*0.90;
+      rUp = computeNegocioModel(Pup, computeModel(Pup), N).resultadoNegocio;
+      rDown = computeNegocioModel(Pdown, computeModel(Pdown), N).resultadoNegocio;
+    } else {
+      const Nup = Object.assign({}, N); Nup[v.key] = base*1.10;
+      const Ndown = Object.assign({}, N); Ndown[v.key] = base*0.90;
+      rUp = computeNegocioModel(P, R, Nup).resultadoNegocio;
+      rDown = computeNegocioModel(P, R, Ndown).resultadoNegocio;
+    }
+    return { label:v.label, low:Math.min(rUp,rDown), high:Math.max(rUp,rDown), range: Math.abs(rUp-rDown) };
+  });
+  impacts.sort((a,b)=>b.range-a.range);
+  const maxRange = Math.max(...impacts.map(i=>i.range), 1);
+
+  const container = document.getElementById('tornadoListNeg');
+  container.innerHTML = '';
+  impacts.forEach(i=>{
+    const lowSpan = Math.max(0, M.resultadoNegocio - i.low)/maxRange*50;
+    const highSpan = Math.max(0, i.high - M.resultadoNegocio)/maxRange*50;
+    const row = document.createElement('div');
+    row.className='tornado-row';
+    row.innerHTML =
+      '<div class="lbl">'+i.label+'</div>'+
+      '<div class="tornado-track"><div class="tornado-mid"></div>'+
+      '<div class="tornado-bar neg-bar" style="left:'+(50-lowSpan)+'%; width:'+lowSpan+'%"></div>'+
+      '<div class="tornado-bar pos-bar" style="left:50%; width:'+highSpan+'%"></div></div>'+
+      '<div class="impact">±'+fmt(i.range/2)+'</div>';
+    container.appendChild(row);
+  });
 }
 
 // ================= SENSIBILIZACIÓN =================
@@ -846,7 +1313,7 @@ function buildSliders(){
     row.innerHTML =
       '<div class="top"><span class="name">'+v.label+'</span><span class="delta" id="delta_'+v.key+'">0%</span></div>'+
       '<input type="range" min="-50" max="50" step="1" value="0" id="slider_'+v.key+'">'+
-      '<div class="vals"><span class="basev" id="baseval_'+v.key+'">base: -</span>'+
+      '<div class="vals"><span class="basev" id="baseval_'+v.key+'">base: —</span>'+
       '<input type="number" class="newval-input" id="newval_'+v.key+'" title="Ingresa el valor nuevo directamente"></div>';
     container.appendChild(row);
   });
@@ -941,20 +1408,27 @@ function renderSensitivity(P, R){
 
 function showTab(name){
   document.getElementById('panel-calc').classList.toggle('active', name==='calc');
+  document.getElementById('panel-negocio').classList.toggle('active', name==='negocio');
   document.getElementById('panel-sens').classList.toggle('active', name==='sens');
+  document.getElementById('panel-sensneg').classList.toggle('active', name==='sensneg');
   document.getElementById('panel-log').classList.toggle('active', name==='log');
+  document.getElementById('panel-breakeven').classList.toggle('active', name==='breakeven');
   document.getElementById('tabBtnCalc').classList.toggle('active', name==='calc');
+  document.getElementById('tabBtnNegocio').classList.toggle('active', name==='negocio');
   document.getElementById('tabBtnSens').classList.toggle('active', name==='sens');
+  document.getElementById('tabBtnSensNeg').classList.toggle('active', name==='sensneg');
   document.getElementById('tabBtnLog').classList.toggle('active', name==='log');
+  document.getElementById('tabBtnBreakeven').classList.toggle('active', name==='breakeven');
   if(name==='log') loadLoginLog();
+  if(name==='breakeven') renderBreakeven(readParams());
 }
 
 // ================= ESCENARIOS GUARDADOS (Supabase) =================
 // 1) Crea un proyecto en https://supabase.com
 // 2) Ejecuta supabase_schema.sql en el SQL Editor de tu proyecto
 // 3) Reemplaza estos dos valores por los de tu proyecto (Settings > API)
-const SUPABASE_URL = 'https://ubrbfsmglxyxinyjyrev.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVicmJmc21nbHh5eGlueWp5cmV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTkyMjQsImV4cCI6MjA5OTE5NTIyNH0.wg22CljBNIkR9YMwrYooGHSSNs1dcw2zJT_ZB9J_UC8';
+const SUPABASE_URL = 'TU_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY';
 
 const supabaseReady = SUPABASE_URL !== 'TU_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'TU_SUPABASE_ANON_KEY';
 const sb = supabaseReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -1087,6 +1561,7 @@ async function doLogout(){
   await sb.auth.signOut();
   isAdmin = false;
   document.getElementById('tabBtnLog').style.display = 'none';
+  document.getElementById('tabBtnBreakeven').style.display = 'none';
   showTab('calc');
   document.getElementById('appRoot').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
@@ -1101,6 +1576,7 @@ function onAuthenticated(){
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appRoot').style.display = 'block';
   document.getElementById('tabBtnLog').style.display = 'none';
+  document.getElementById('tabBtnBreakeven').style.display = 'none';
   sb.auth.getUser().then(async ({data})=>{
     document.getElementById('userEmailLabel').textContent = data.user ? data.user.email : '';
     if(data.user){
@@ -1116,7 +1592,9 @@ function onAuthenticated(){
       isAdmin = false;
     }
     document.getElementById('tabBtnLog').style.display = isAdmin ? '' : 'none';
+    document.getElementById('tabBtnBreakeven').style.display = isAdmin ? '' : 'none';
     renderScenarioList();
+    if(isAdmin) renderBreakeven(readParams());
   });
   calc();
   renderScenarioList();
@@ -1141,8 +1619,77 @@ async function loadLoginLog(){
   });
 }
 
-document.querySelectorAll('#panel-calc input').forEach(el=>el.addEventListener('input', calc));
+document.querySelectorAll('#panel-calc input, #panel-negocio input').forEach(el=>el.addEventListener('input', calc));
 document.getElementById('loginPassword')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doLogin(); });
+
+// ================= PUNTO DE EQUILIBRIO (solo admin) =================
+function computeResultados(P){
+  const R = computeModel(P);
+  const N = readNegocioParams();
+  const M = computeNegocioModel(P, R, N);
+  return { maquila: R.margenPlanta, concentrado: M.resultadoNegocio, catodo: M.resultadoCatodo };
+}
+
+function evalAt(P, key, value, scaleTonnage){
+  const P2 = Object.assign({}, P);
+  if(scaleTonnage){
+    ['ton_r','ton_c','ton_t','ton_m','ton_o'].forEach(k=>P2[k]=P[k]*value);
+  } else {
+    P2[key] = value;
+  }
+  return computeResultados(P2);
+}
+
+// Resuelve, por interpolación lineal exacta (el modelo es afín en cada variable tomada por separado),
+// el valor de x donde el resultado = 0, para cada uno de los 3 métodos.
+function solveBreakEven(P, key, scaleTonnage){
+  const x0 = scaleTonnage ? 1 : P[key];
+  const x1 = scaleTonnage ? 1.5 : (x0!==0 ? x0*1.5 : 1);
+  const f0 = evalAt(P, key, x0, scaleTonnage);
+  const f1 = evalAt(P, key, x1, scaleTonnage);
+  const out = {};
+  ['maquila','concentrado','catodo'].forEach(m=>{
+    const slope = (f1[m]-f0[m])/(x1-x0);
+    const xstar = Math.abs(slope)>1e-9 ? x0 - f0[m]/slope : null;
+    out[m] = { xstar, current: x0, currentResult: f0[m] };
+  });
+  return out;
+}
+
+function beCell(id, res, fmtFn){
+  const el = document.getElementById(id);
+  if(res.xstar===null || !isFinite(res.xstar)){
+    el.innerHTML = 'sin efecto';
+    return;
+  }
+  const badge = res.currentResult>=0 ? '<span class="be-badge be-ok">sobre equilibrio</span>' : '<span class="be-badge be-bad">bajo equilibrio</span>';
+  el.innerHTML = fmtFn(res.xstar) + badge;
+}
+
+function renderBreakeven(P){
+  if(!isAdmin) return;
+
+  const beTon = solveBreakEven(P, null, true);
+  const tonBase = P.ton_t + P.ton_m + P.ton_o;
+  beCell('be_ton_maquila', beTon.maquila, x=>Math.round(tonBase*x).toLocaleString('es-CL')+' tms');
+  beCell('be_ton_conc', beTon.concentrado, x=>Math.round(tonBase*x).toLocaleString('es-CL')+' tms');
+  beCell('be_ton_cat', beTon.catodo, x=>Math.round(tonBase*x).toLocaleString('es-CL')+' tms');
+
+  const bePrecio = solveBreakEven(P, 'Pcu', false);
+  beCell('be_precio_maquila', bePrecio.maquila, x=>x.toFixed(2));
+  beCell('be_precio_conc', bePrecio.concentrado, x=>x.toFixed(2));
+  beCell('be_precio_cat', bePrecio.catodo, x=>x.toFixed(2));
+
+  const beLey = solveBreakEven(P, 'leyCu_t', false);
+  beCell('be_ley_maquila', beLey.maquila, x=>x.toFixed(3)+'%');
+  beCell('be_ley_conc', beLey.concentrado, x=>x.toFixed(3)+'%');
+  beCell('be_ley_cat', beLey.catodo, x=>x.toFixed(3)+'%');
+
+  const beRec = solveBreakEven(P, 'recCu_t', false);
+  beCell('be_rec_maquila', beRec.maquila, x=>x.toFixed(2)+'%');
+  beCell('be_rec_conc', beRec.concentrado, x=>x.toFixed(2)+'%');
+  beCell('be_rec_cat', beRec.catodo, x=>x.toFixed(2)+'%');
+}
 
 (async function initAuth(){
   if(!supabaseReady){
